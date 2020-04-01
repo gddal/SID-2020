@@ -90,13 +90,13 @@ alter table Museu.User
 alter table Museu.RondaPlaneada
    add constraint FK_User_RondaPlaneada_Ronda_ foreign key (User_ID)
    references User(ID)
-   on delete cascade
+   on delete restrict
    on update cascade
 ; 
 alter table Museu.RondaPlaneada
    add constraint FK_Ronda_RondaPlaneada_User_ foreign key (Ronda_diaSemana, Ronda_inicio)
    references Ronda(diaSemana, inicio)
-   on delete cascade
+   on delete restrict
    on update cascade
 ;
 
