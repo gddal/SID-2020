@@ -98,6 +98,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ExportarLogs`()
 BEGIN
 SELECT 'id','DataOperacao','Emailutilizador','Operacao','EmailAnterior','EmailNovo','NomeAnterior','NomeNovo','TipoAnterior','TipoNovo','MoradaAnterior','MoradaNova' UNION
 SELECT * FROM logutilizador
+WHERE DataOperacao = current_date()
 INTO OUTFILE 'C:\\xampp\\mysql\\bin\\logutilizador.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -105,6 +106,7 @@ LINES TERMINATED BY '\n';
 
 SELECT 'id','DataOperacao','Emailutilizador','Operacao','LimiteTemperaturaAnterior','LimiteTemperaturaNovo','LimiteHumidadeAnterior','LimiteHumidadeNovo','LimiteLuminosidadeAnterior','LimiteLuminosidadeNovo' UNION
 SELECT * FROM logsistema
+WHERE DataOperacao = current_date()
 INTO OUTFILE 'C:\\xampp\\mysql\\bin\\logsistema.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -112,6 +114,7 @@ LINES TERMINATED BY '\n';
 
 SELECT 'id','DataOperacao','Emailutilizador','Operacao','EmailAnterior','EmailNovo','HoraInicioAnterior','HoraInicioNova','HoraFimAnterior','HoraFimNova','DataAnterior','DataNova' UNION
 SELECT * FROM logrondaextra
+WHERE DataOperacao = current_date()
 INTO OUTFILE 'C:\\xampp\\mysql\\bin\\logrondaextra.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -119,6 +122,7 @@ LINES TERMINATED BY '\n';
 
 SELECT 'id','DataOperacao','Emailutilizador','Operacao','EmailAnterior','EmailNovo','DataAnterior','DataNova','HoraAnterior','HoraNova' UNION
 SELECT * FROM logrondaplaneada
+WHERE DataOperacao = current_date()
 INTO OUTFILE 'C:\\xampp\\mysql\\bin\\logrondaplaneada.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -126,10 +130,10 @@ LINES TERMINATED BY '\n';
 
 SELECT 'id','DataOperacao','Emailutilizador','Operacao','idMedicaoAnterior','idMedicaoNova','ValorMedicaoAnterior','ValorMedicaoNova','TipoSensorAnterior','TipoSensorNovo','DataHoraMedicaoAnterior','DataHoraMedicaoNova' UNION
 SELECT * FROM logmedicoes
+WHERE DataOperacao = current_date()
 INTO OUTFILE 'C:\\xampp\\mysql\\bin\\logmedicoes.csv'
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
 
 END
-
