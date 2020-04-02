@@ -57,7 +57,7 @@ END
 CREATE DEFINER=`root`@`localhost` TRIGGER `new_schema2`.`rondaplaneada_AFTER_UPDATE` AFTER UPDATE ON `rondaplaneada` 
 FOR EACH ROW
 BEGIN
-insert into new_schema2.rondaplaneada
+insert into new_schema2.logrondaplaneada
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, EmailAnterior, DataNova, DataAnterior, HoraNova, HoraAnterior)
 
 Values

@@ -1,10 +1,10 @@
-CREATE DATABASE Testing;   -- Usar o nome da base de dados selecionada
+use testing;   -- Usar o nome da base de dados selecionada
 
  
 CREATE TABLE `utilizador` (
   `EmailUtilizador` varchar(100) NOT NULL,
   `NomeUtilizador` varchar(80) NOT NULL,
-  `TipoUtilizador` enum('Seguranca','Chefe Seguranca','Administrador','DiretorMuseu') NOT NULL,
+  `TipoUtilizador` enum('Seguranca','ChefeSeguranca','Administrador','DiretorMuseu') NOT NULL,
   `MoradaUtilizador` varchar(200) NOT NULL,
   PRIMARY KEY (`EmailUtilizador`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
