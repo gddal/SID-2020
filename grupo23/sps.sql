@@ -16,7 +16,7 @@ USE `Museu`;
 DELIMITER $$
 CREATE PROCEDURE `select_user_id`(IN in_ID   Integer)
 BEGIN
-  INSERT INTO User_log ( op, opUser, opData, UserId ) VALUES( 'select', current_user(), now(), in_ID );
+  INSERT INTO User_log ( op, opUser, opData, User_Id ) VALUES( 'select', current_user(), now(), in_ID );
   SELECT ID,Grupo_ID,username,email,nome,apelido from User Where ID = in_ID;
 END$$
 
