@@ -88,7 +88,7 @@ BEGIN
 SELECT * FROM logsistema
 END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarLogMedicoes`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogMedicoes`()
 BEGIN
 SELECT * FROM logmedicoes;
 END
