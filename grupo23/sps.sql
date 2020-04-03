@@ -80,7 +80,25 @@ CREATE PROCEDURE `apagar_user`(
   IN in_ID  Integer
   )
 BEGIN
-  DELETE FROM User WHERE ID=in_ID;
+  IF EXISTS (SELECT * FROM User WHERE ID = in_ID) THEN
+    SELECT username INTO @login FROM User WHERE ID = in_ID;
+    DELETE FROM User WHERE ID=in_ID;
+    CALL delete_user(@login);
+  END IF;
+END$$
+
+DELIMITER ;
+
+DROP procedure IF EXISTS `Museu`.`delete_user`;
+
+USE `Museu`;
+DELIMITER $$
+CREATE PROCEDURE `delete_user`(IN username varchar(100))
+BEGIN
+  SET @deleteUserCMD = concat('DROP USER IF EXISTS ''', username, '''@''', 'localhost', ''';');
+  PREPARE deleteUserStatement FROM @deleteUserCMD;
+  EXECUTE deleteUserStatement;
+  DEALLOCATE PREPARE deleteUserStatement;   
 END$$
 
 DELIMITER ;

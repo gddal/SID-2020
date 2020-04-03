@@ -3,11 +3,11 @@
 -- Museu.User
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`User_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`User_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`User_AFTER_INSERT` AFTER INSERT ON `User`
+CREATE TRIGGER `Museu`.`User_insert` AFTER INSERT ON `User`
 FOR EACH ROW
 BEGIN
   INSERT INTO User_log (
@@ -33,11 +33,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`User_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`User_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`User_AFTER_UPDATE` AFTER UPDATE ON `User`
+CREATE TRIGGER `Museu`.`User_update` AFTER UPDATE ON `User`
 FOR EACH ROW
 BEGIN
   INSERT INTO User_log (
@@ -73,11 +73,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`User_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`User_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`User_AFTER_DELETE` AFTER DELETE ON `User`
+CREATE TRIGGER `Museu`.`User_delete` AFTER DELETE ON `User`
 FOR EACH ROW
 BEGIN
   INSERT INTO User_log (
@@ -108,11 +108,11 @@ DELIMITER ;
 -- Museu.Grupo
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`Grupo_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`Grupo_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Grupo_AFTER_INSERT` AFTER INSERT ON `Grupo`
+CREATE TRIGGER `Museu`.`Grupo_insert` AFTER INSERT ON `Grupo`
 FOR EACH ROW
 BEGIN
   INSERT INTO Grupo_log (
@@ -132,11 +132,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Grupo_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`Grupo_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Grupo_AFTER_UPDATE` AFTER UPDATE ON `Grupo`
+CREATE TRIGGER `Museu`.`Grupo_update` AFTER UPDATE ON `Grupo`
 FOR EACH ROW
 BEGIN
   INSERT INTO Grupo_log (
@@ -160,11 +160,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Grupo_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`Grupo_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Grupo_AFTER_DELETE` AFTER DELETE ON `Grupo`
+CREATE TRIGGER `Museu`.`Grupo_delete` AFTER DELETE ON `Grupo`
 FOR EACH ROW
 BEGIN
   INSERT INTO Grupo_log (
@@ -189,11 +189,11 @@ DELIMITER ;
 -- Museu.RondaExtra
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaExtra_AFTER_INSERT` AFTER INSERT ON `RondaExtra`
+CREATE TRIGGER `Museu`.`RondaExtra_insert` AFTER INSERT ON `RondaExtra`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaExtra_log (
@@ -215,11 +215,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaExtra_AFTER_UPDATE` AFTER UPDATE ON `RondaExtra`
+CREATE TRIGGER `Museu`.`RondaExtra_update` AFTER UPDATE ON `RondaExtra`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaExtra_log (
@@ -247,11 +247,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaExtra_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaExtra_AFTER_DELETE` AFTER DELETE ON `RondaExtra`
+CREATE TRIGGER `Museu`.`RondaExtra_delete` AFTER DELETE ON `RondaExtra`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaExtra_log (
@@ -278,11 +278,11 @@ DELIMITER ;
 -- Museu.Ronda
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`Ronda_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`Ronda_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Ronda_AFTER_INSERT` AFTER INSERT ON `Ronda`
+CREATE TRIGGER `Museu`.`Ronda_insert` AFTER INSERT ON `Ronda`
 FOR EACH ROW
 BEGIN
   INSERT INTO Ronda_log (
@@ -304,11 +304,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Ronda_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`Ronda_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Ronda_AFTER_UPDATE` AFTER UPDATE ON `Ronda`
+CREATE TRIGGER `Museu`.`Ronda_update` AFTER UPDATE ON `Ronda`
 FOR EACH ROW
 BEGIN
   INSERT INTO Ronda_log (
@@ -336,11 +336,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Ronda_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`Ronda_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Ronda_AFTER_DELETE` AFTER DELETE ON `Ronda`
+CREATE TRIGGER `Museu`.`Ronda_delete` AFTER DELETE ON `Ronda`
 FOR EACH ROW
 BEGIN
   INSERT INTO Ronda_log (
@@ -367,11 +367,11 @@ DELIMITER ;
 -- Museu.RondaPlaneada
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaPlaneada_AFTER_INSERT` AFTER INSERT ON `RondaPlaneada`
+CREATE TRIGGER `Museu`.`RondaPlaneada_insert` AFTER INSERT ON `RondaPlaneada`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaPlaneada_log (
@@ -395,11 +395,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaPlaneada_AFTER_UPDATE` AFTER UPDATE ON `RondaPlaneada`
+CREATE TRIGGER `Museu`.`RondaPlaneada_update` AFTER UPDATE ON `RondaPlaneada`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaPlaneada_log (
@@ -431,11 +431,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`RondaPlaneada_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`RondaPlaneada_AFTER_DELETE` AFTER DELETE ON `RondaPlaneada`
+CREATE TRIGGER `Museu`.`RondaPlaneada_delete` AFTER DELETE ON `RondaPlaneada`
 FOR EACH ROW
 BEGIN
   INSERT INTO RondaPlaneada_log (
@@ -464,11 +464,11 @@ DELIMITER ;
 -- Museu.Sensores
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`Sensores_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`Sensores_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Sensores_AFTER_INSERT` AFTER INSERT ON `Sensores`
+CREATE TRIGGER `Museu`.`Sensores_insert` AFTER INSERT ON `Sensores`
 FOR EACH ROW
 BEGIN
   INSERT INTO Sensores_log (
@@ -496,11 +496,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Sensores_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`Sensores_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Sensores_AFTER_UPDATE` AFTER UPDATE ON `Sensores`
+CREATE TRIGGER `Museu`.`Sensores_update` AFTER UPDATE ON `Sensores`
 FOR EACH ROW
 BEGIN
   INSERT INTO Sensores_log (
@@ -540,11 +540,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Sensores_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`Sensores_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Sensores_AFTER_DELETE` AFTER DELETE ON `Sensores`
+CREATE TRIGGER `Museu`.`Sensores_delete` AFTER DELETE ON `Sensores`
 FOR EACH ROW
 BEGIN
   INSERT INTO Sensores_log (
@@ -577,11 +577,11 @@ DELIMITER ;
 -- Museu.Medicoes
 -- ------------------------------------------------
 
-DROP TRIGGER IF EXISTS `Museu`.`Medicoes_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `Museu`.`Medicoes_insert`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Medicoes_AFTER_INSERT` AFTER INSERT ON `Medicoes`
+CREATE TRIGGER `Museu`.`Medicoes_insert` AFTER INSERT ON `Medicoes`
 FOR EACH ROW
 BEGIN
   INSERT INTO Medicoes_log (
@@ -603,11 +603,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Medicoes_AFTER_UPDATE`;
+DROP TRIGGER IF EXISTS `Museu`.`Medicoes_update`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Medicoes_AFTER_UPDATE` AFTER UPDATE ON `Medicoes`
+CREATE TRIGGER `Museu`.`Medicoes_update` AFTER UPDATE ON `Medicoes`
 FOR EACH ROW
 BEGIN
   INSERT INTO Medicoes_log (
@@ -635,11 +635,11 @@ BEGIN
 END$$
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS `Museu`.`Medicoes_AFTER_DELETE`;
+DROP TRIGGER IF EXISTS `Museu`.`Medicoes_delete`;
 
 DELIMITER $$
 USE `Museu`$$
-CREATE TRIGGER `Museu`.`Medicoes_AFTER_DELETE` AFTER DELETE ON `Medicoes`
+CREATE TRIGGER `Museu`.`Medicoes_delete` AFTER DELETE ON `Medicoes`
 FOR EACH ROW
 BEGIN
   INSERT INTO Medicoes_log (

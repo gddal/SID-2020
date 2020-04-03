@@ -32,6 +32,7 @@ GRANT EXECUTE ON PROCEDURE Museu.create_user TO Adm;
 GRANT EXECUTE ON PROCEDURE Museu.grant_user TO Adm;
 
 GRANT EXECUTE ON PROCEDURE Museu.apagar_user TO Adm;
+GRANT EXECUTE ON PROCEDURE Museu.delete_user TO Adm;
 
 GRANT EXECUTE ON PROCEDURE Museu.select_user TO Adm;
 GRANT EXECUTE ON PROCEDURE Museu.select_user TO Dir;
