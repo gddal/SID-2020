@@ -26,7 +26,7 @@ if exist logutilizador.csv (
 
 
 :import
-logutilizador.csv mysql -uroot -p -P 29999 --local-infile "bddestino" < importaux.sql
+mysql -uroot -p -P 29999 --local-infile "bddestino" < importaux.sql
 goto :delete
 
 
