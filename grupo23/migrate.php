@@ -41,7 +41,7 @@ foreach ($tb_list as $table) {
     if ($DEBUG) echo "Query : SELECT * FROM $table WHERE ID > $max_id" . PHP_EOL;
     while ($row = mysqli_fetch_assoc($result)) {
         $sql = "INSERT INTO $table (" . implode(", ", array_keys($row)) . ") VALUES ('" . implode("', '", array_values($row)) . "');";
-        if ($DEBUG) echo "Incert : $sql" . PHP_EOL;
+        if ($DEBUG) echo "Insert : $sql" . PHP_EOL;
         mysqli_query($conn_target, str_replace("''", "null", $sql));
     }
 }
