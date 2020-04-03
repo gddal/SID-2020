@@ -59,7 +59,7 @@ END
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RemoverRondaPlaneada`(iEmailUtilizador varchar(100), iDataAno date, iHoraRonda time)
 BEGIN
-DELETE FROM rondaplaneada WHERE EmailUtilizador = iEmailUtilizador;
+DELETE FROM rondaplaneada WHERE EmailUtilizador = iEmailUtilizador AND DataAno = iDataAno AND HoraRonda = iHoraRonda;
 END
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CriarRondaExtra`(iEmailUtilizador varchar(100), iHoraInicio time, iHoraFim time, iData date)
