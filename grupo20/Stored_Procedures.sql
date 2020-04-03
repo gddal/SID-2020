@@ -63,8 +63,10 @@ END
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaUtilizadores`()
 BEGIN
+INSERT INTO logutilizador(DataOperacao,EmailUtilizador,Operacao) VALUES(GETDATE(), CURRENT_USER(),'S')
 SELECT * FROM utilizador
 END
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogUtilizadores`()
 BEGIN
