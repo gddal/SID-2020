@@ -29,6 +29,7 @@ $db_target = 'Auditor';
 $user = 'system';
 $password = 'password';
 
+$DEBUG = true;
 
 $conn_source = db_connect($host_source, $user, $password, $db_source);
 $conn_target = db_connect($host_target, $user, $password, $db_target);
@@ -37,10 +38,10 @@ foreach ($tb_list as $table) {
 
     $max_id = max_id($conn_target, $table);
     $result = mysqli_query($conn_source, "SELECT * FROM $table WHERE ID > $max_id");
-    echo "Query : SELECT * FROM $table WHERE ID > $max_id" . PHP_EOL;
+    if ($DEBUG) echo "Query : SELECT * FROM $table WHERE ID > $max_id" . PHP_EOL;
     while ($row = mysqli_fetch_assoc($result)) {
-        echo "Copia..." . PHP_EOL;
         $sql = "INSERT INTO $table (" . implode(", ", array_keys($row)) . ") VALUES ('" . implode("', '", array_values($row)) . "');";
+        if ($DEBUG) echo "Incert : $sql" . PHP_EOL;
         mysqli_query($conn_target, str_replace("''", "null", $sql));
     }
 }

@@ -1,4 +1,4 @@
-DROP USER system@localhost;
+DROP USER IF EXISTS system@localhost;
 CREATE USER system@localhost IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON Museu.* TO system@localhost;
 GRANT ALL PRIVILEGES ON Auditor.* TO system@localhost;

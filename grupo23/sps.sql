@@ -35,9 +35,11 @@ CREATE PROCEDURE `inserir_user`(
   IN in_pwd varchar(20)
   )
 BEGIN
-  INSERT INTO User ( Grupo_ID,username,email,nome,apelido ) VALUES( in_Grupo_ID,in_username,in_email,in_nome,in_apelido );
-  CALL create_user(in_username, in_pwd);
-  CALL grant_user(in_username, in_Grupo_ID);
+  IF NOT EXISTS (SELECT * FROM User WHERE username = in_username) THEN
+    INSERT INTO User ( Grupo_ID,username,email,nome,apelido ) VALUES( in_Grupo_ID,in_username,in_email,in_nome,in_apelido );
+    CALL create_user(in_username, in_pwd);
+    CALL grant_user(in_username, in_Grupo_ID);
+  END IF;
 END$$
 
 DELIMITER ;
