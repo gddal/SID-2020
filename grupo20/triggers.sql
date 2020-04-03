@@ -7,7 +7,7 @@ insert into new_schema2.logutilizador
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, NomeNovo, TipoNovo, MoradaNova)
 
 Values
-(current_date(), user(), 'I', NEW.EmailUtilizador, NEW.NomeUtilizador, NEW.TipoUtilizador, NEW.MoradaUtilizador);
+(getdate(), user(), 'I', NEW.EmailUtilizador, NEW.NomeUtilizador, NEW.TipoUtilizador, NEW.MoradaUtilizador);
 
 END
 
@@ -20,7 +20,7 @@ insert into new_schema2.logutilizador
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, EmailAnterior, NomeNovo, NomeAnterior, TipoNovo, TipoAnterior, MoradaNova, MoradaAnterior)
 
 Values
-(current_date(), user(), 'U', NEW.EmailUtilizador, OLD.EmailUtilizador, NEW.NomeUtilizador, OLD.NomeUtilizador, NEW.TipoUtilizador, OLD.TipoUtilizador, NEW.MoradaUtilizador, OLD.MoradaUtilizador);
+(getdate(), user(), 'U', NEW.EmailUtilizador, OLD.EmailUtilizador, NEW.NomeUtilizador, OLD.NomeUtilizador, NEW.TipoUtilizador, OLD.TipoUtilizador, NEW.MoradaUtilizador, OLD.MoradaUtilizador);
 
 END
 
@@ -33,7 +33,7 @@ insert into new_schema2.logutilizador
 (DataOperacao, EmailUtilizador, Operacao, EmailAnterior, NomeAnterior, TipoAnterior, MoradaAnterior)
 
 Values
-(current_date(), user(), 'D',OLD.EmailUtilizador, OLD.NomeUtilizador,OLD.TipoUtilizador,OLD.MoradaUtilizador);
+(getdate(), user(), 'D',OLD.EmailUtilizador, OLD.NomeUtilizador,OLD.TipoUtilizador,OLD.MoradaUtilizador);
 
 END
 
@@ -47,7 +47,7 @@ insert into new_schema2.logrondaplaneada
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, DataNova, HoraNova)
 
 Values
-(current_date(), user(), 'I', NEW.EmailUtilizador, NEW.DataAno, NEW.HoraRonda);
+(getdate(), user(), 'I', NEW.EmailUtilizador, NEW.DataAno, NEW.HoraRonda);
 
 END
 
@@ -61,7 +61,7 @@ insert into new_schema2.logrondaplaneada
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, EmailAnterior, DataNova, DataAnterior, HoraNova, HoraAnterior)
 
 Values
-(current_date(), user(), 'U', NEW.EmailUtilizador, OLD.EmailUtilizador, NEW.DataAno, OLD.DataAno, NEW.HoraRonda, OLD.HoraRonda);
+(getdate(), user(), 'U', NEW.EmailUtilizador, OLD.EmailUtilizador, NEW.DataAno, OLD.DataAno, NEW.HoraRonda, OLD.HoraRonda);
 
 END
 
@@ -74,7 +74,7 @@ insert into new_schema2.logrondaplaneada
 (DataOperacao, EmailUtilizador, Operacao, EmailAnterior, DataAnterior,  HoraAnterior)
 
 Values
-(current_date(), user(), 'D',OLD.EmailUtilizador, OLD.DataAno, OLD.HoraRonda);
+(getdate(), user(), 'D',OLD.EmailUtilizador, OLD.DataAno, OLD.HoraRonda);
 
 END
 
@@ -90,7 +90,7 @@ insert into new_schema2.logrondaextra
 (DataOperacao, EmailUtilizador, Operacao, EmailNovo, HoraInicioNova, HoraFimNova, DataNova)
 
 Values
-(current_date(), user(), 'I', NEW.EmailUtilizador, NEW.HoraInicio, NEW.HoraFim, NEW.Data);
+(getdate(), user(), 'I', NEW.EmailUtilizador, NEW.HoraInicio, NEW.HoraFim, NEW.Data);
 
 END
 
@@ -106,6 +106,6 @@ insert into new_schema2.logrondaextra
 (DataOperacao, EmailUtilizador, Operacao, EmailAnterior, HoraInicioAnterior,  HoraFimAnterior, DataAnterior)
 
 Values
-(current_date(), user(), 'D', OLD.EmailUtilizador, OLD.HoraInicio, OLD.HoraFim, OLD.Data);
+(getdate(), user(), 'D', OLD.EmailUtilizador, OLD.HoraInicio, OLD.HoraFim, OLD.Data);
 
 END
