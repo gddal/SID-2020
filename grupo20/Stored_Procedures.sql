@@ -50,13 +50,6 @@ Values(iEmailUtilizador, iDataAno, iHoraRonda);
 END
 
 
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterarRondaPlaneada`(iEmailUtilizador varchar(100), iDataAno date, iHoraRonda time)
-BEGIN
-UPDATE rondaplaneada SET DataAno = iDataAno, HoraRonda = iHoraRonda WHERE EmailUtilizador= iEmailUtilizador;
-END
-
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `RemoverRondaPlaneada`(iEmailUtilizador varchar(100), iDataAno date, iHoraRonda time)
 BEGIN
 DELETE FROM rondaplaneada WHERE EmailUtilizador = iEmailUtilizador AND DataAno = iDataAno AND HoraRonda = iHoraRonda;
