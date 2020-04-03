@@ -61,29 +61,29 @@ INSERT into rondaextra
 Values(iEmailUtilizador, iHoraInicio, iHoraFim, iData);
 END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaUtilizadores`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaUtilizador`()
 BEGIN
 INSERT INTO logutilizador(DataOperacao,EmailUtilizador,Operacao) VALUES(GETDATE(), CURRENT_USER(),'S')
 SELECT * FROM utilizador
 END
 
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogUtilizadores`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogUtilizador`()
 BEGIN
 SELECT * FROM logutilizador
 END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarLogRondaExtra`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogRondaExtra`()
 BEGIN
 SELECT * FROM logrondaextra
 END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarLogRondaPlaneada`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogRondaPlaneada`()
 BEGIN
 SELECT * FROM logrondaplaneada
 END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultarLogSistema`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ConsultaLogSistema`()
 BEGIN
 SELECT * FROM logsistema
 END
