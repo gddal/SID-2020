@@ -11,7 +11,9 @@ if exist logutilizador.csv(
 		)
 	)
 )	
-else mysql -u root -p -P 29999 "new_schema2" -e "CALL ExportarLogs();"
-logutilizador.csv mysql -uroot -p -P 29999 --local-infile "new_schema2" < importaux.sql
-
-pause
+else (
+	mysql -u root -p -P 29999 "new_schema2" -e "CALL ExportarLogs();"
+	logutilizador.csv mysql -uroot -p -P 29999 --local-infile "new_schema2" < importaux.sql
+	)
+	
+del *.csv
