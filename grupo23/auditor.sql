@@ -32,8 +32,8 @@ create table Log.User_log
 create table Log.Grupo_log
 (
    op   char(30)   null,
-   op_user   char(20)   null,
-   op_data   datetime   null,
+   opUser   char(20)   null,
+   opData   datetime   null,
    ID   Integer   not null,
    descricaoAntes   char(50)   null,
    descricaoDepois   char(50)   null,
