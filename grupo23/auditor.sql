@@ -1,14 +1,14 @@
-create database Auditor;
+create database Log;
 
-drop table if exists Auditor.User_log ;
-drop table if exists Auditor.Grupo_log ;
-drop table if exists Auditor.Ronda_log ;
-drop table if exists Auditor.RondaPlaneada_log ;
-drop table if exists Auditor.RondaExtra_log ;
-drop table if exists Auditor.Sensores_log ;
-drop table if exists Auditor.Medicoes_log ;
+drop table if exists Log.User_log ;
+drop table if exists Log.Grupo_log ;
+drop table if exists Log.Ronda_log ;
+drop table if exists Log.RondaPlaneada_log ;
+drop table if exists Log.RondaExtra_log ;
+drop table if exists Log.Sensores_log ;
+drop table if exists Log.Medicoes_log ;
 
-create table Auditor.User_log
+create table Log.User_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -29,7 +29,7 @@ create table Auditor.User_log
    constraint PK_User_log primary key (ID)
 );
  
-create table Auditor.Grupo_log
+create table Log.Grupo_log
 (
    op   char(30)   null,
    op_user   char(20)   null,
@@ -43,7 +43,7 @@ create table Auditor.Grupo_log
    constraint PK_Grupo_log primary key (ID)
 );
  
-create table Auditor.Ronda_log
+create table Log.Ronda_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -59,7 +59,7 @@ create table Auditor.Ronda_log
    constraint PK_Ronda_logs primary key (ID)
 );
 
-create table Auditor.RondaPlaneada_log
+create table Log.RondaPlaneada_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -77,7 +77,7 @@ create table Auditor.RondaPlaneada_log
    constraint PK_RondaPlaneada_log primary key (ID)
 );
  
-create table Auditor.RondaExtra_log
+create table Log.RondaExtra_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -93,7 +93,7 @@ create table Auditor.RondaExtra_log
    constraint PK_RondaExtra_log primary key (ID)
 );
 
-create table Auditor.Sensores_log
+create table Log.Sensores_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -114,7 +114,7 @@ create table Auditor.Sensores_log
    constraint PK_Sensores_log primary key (ID)
 );
 
-create table Auditor.Medicoes_log
+create table Log.Medicoes_log
 (
    op   char(30)   null,
    opUser   char(20)   null,

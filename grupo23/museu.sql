@@ -1,14 +1,14 @@
-create database Museu;
+create database Main;
 
-drop table if exists Museu.User ;
-drop table if exists Museu.Grupo ;
-drop table if exists Museu.Ronda ;
-drop table if exists Museu.RondaExtra ;
-drop table if exists Museu.RondaPlaneada ;
-drop table if exists Museu.Sensores ;
-drop table if exists Museu.Medicoes ;
+drop table if exists Main.User ;
+drop table if exists Main.Grupo ;
+drop table if exists Main.Ronda ;
+drop table if exists Main.RondaExtra ;
+drop table if exists Main.RondaPlaneada ;
+drop table if exists Main.Sensores ;
+drop table if exists Main.Medicoes ;
  
-create table Museu.User
+create table Main.User
 (
    ID   Integer   not null auto_increment,
    Grupo_ID   char(20)   not null,
@@ -20,7 +20,7 @@ create table Museu.User
    constraint PK_User primary key (ID)
 );
 
-create table Museu.Grupo
+create table Main.Grupo
 (
    nome   char(20)   not null,
    descricao   char(50)   not null,
@@ -28,7 +28,7 @@ create table Museu.Grupo
    constraint PK_Grupo primary key (nome)
 );
 
-create table Museu.Ronda
+create table Main.Ronda
 (
    diaSemana   char(20)   not null,
    inicio   time   not null,
@@ -37,7 +37,7 @@ create table Museu.Ronda
    constraint PK_Ronda primary key (diaSemana, inicio)
 );
  
- create table Museu.RondaPlaneada
+ create table Main.RondaPlaneada
 (
    User_ID   Integer   not null,
    Ronda_diaSemana   char(20)   not null,
@@ -47,7 +47,7 @@ create table Museu.Ronda
    constraint PK_RondaPlaneada primary key (User_ID, Ronda_diaSemana, Ronda_inicio)
 );
  
-create table Museu.RondaExtra
+create table Main.RondaExtra
 (
    ID   Integer   not null auto_increment,
    User_ID   Integer   not null,
@@ -57,7 +57,7 @@ create table Museu.RondaExtra
    constraint PK_RondaExtra primary key (ID)
 );
  
-create table Museu.Sensores
+create table Main.Sensores
 (
    ID   Integer   not null auto_increment,
    senTipo   char(10)   null,
@@ -70,7 +70,7 @@ create table Museu.Sensores
    constraint PK_Sensores primary key (ID)
 );
  
-create table Museu.Medicoes
+create table Main.Medicoes
 (
    ID   Integer   not null auto_increment,
    Sensor_ID   Integer   not null,
@@ -80,55 +80,55 @@ create table Museu.Medicoes
    constraint PK_Medicoes primary key (ID)
 ); 
 
-alter table Museu.User
+alter table Main.User
    add constraint FK_User_userGrupo_Grupo foreign key (Grupo_ID)
    references Grupo(nome)
    on delete restrict
    on update cascade
 ;
  
-alter table Museu.RondaPlaneada
+alter table Main.RondaPlaneada
    add constraint FK_User_RondaPlaneada_Ronda_ foreign key (User_ID)
    references User(ID)
    on delete restrict
    on update cascade
 ; 
-alter table Museu.RondaPlaneada
+alter table Main.RondaPlaneada
    add constraint FK_Ronda_RondaPlaneada_User_ foreign key (Ronda_diaSemana, Ronda_inicio)
    references Ronda(diaSemana, inicio)
    on delete restrict
    on update cascade
 ;
 
-alter table Museu.RondaExtra
+alter table Main.RondaExtra
    add constraint FK_RondaExtra_User foreign key (User_ID)
    references User(ID)
    on delete restrict
    on update cascade
 ;
   
-alter table Museu.Medicoes
+alter table Main.Medicoes
    add constraint FK_Medicoes_noname_Sensores foreign key (Sensor_ID)
    references Sensores(ID)
    on delete restrict
    on update cascade
 ;
 
-INSERT INTO Museu.Grupo (nome,descricao) VALUES ('Adm','Administrador' );
-INSERT INTO Museu.Grupo (nome,descricao) VALUES ('Dir','Diretor do museu' );
-INSERT INTO Museu.Grupo (nome,descricao) VALUES ('Che','Chefe de segurança' );
-INSERT INTO Museu.Grupo (nome,descricao) VALUES ('Seg','Segurança' );
-INSERT INTO Museu.Grupo (nome,descricao) VALUES ('Aud','Auditor' );
+INSERT INTO Main.Grupo (nome,descricao) VALUES ('Adm','Administrador' );
+INSERT INTO Main.Grupo (nome,descricao) VALUES ('Dir','Diretor do museu' );
+INSERT INTO Main.Grupo (nome,descricao) VALUES ('Che','Chefe de segurança' );
+INSERT INTO Main.Grupo (nome,descricao) VALUES ('Seg','Segurança' );
+INSERT INTO Main.Grupo (nome,descricao) VALUES ('Aud','Auditor' );
 
-drop table if exists Museu.User_log ;
-drop table if exists Museu.Grupo_log ;
-drop table if exists Museu.Ronda_log ;
-drop table if exists Museu.RondaPlaneada_log ;
-drop table if exists Museu.RondaExtra_log ;
-drop table if exists Museu.Sensores_log ;
-drop table if exists Museu.Medicoes_log ;
+drop table if exists Main.User_log ;
+drop table if exists Main.Grupo_log ;
+drop table if exists Main.Ronda_log ;
+drop table if exists Main.RondaPlaneada_log ;
+drop table if exists Main.RondaExtra_log ;
+drop table if exists Main.Sensores_log ;
+drop table if exists Main.Medicoes_log ;
 
-create table Museu.User_log
+create table Main.User_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -149,7 +149,7 @@ create table Museu.User_log
    constraint PK_User_log primary key (ID)
 );
  
-create table Museu.Grupo_log
+create table Main.Grupo_log
 (
    op   char(30)   null,
    op_user   char(20)   null,
@@ -163,7 +163,7 @@ create table Museu.Grupo_log
    constraint PK_Grupo_log primary key (ID)
 );
  
-create table Museu.Ronda_log
+create table Main.Ronda_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -179,7 +179,7 @@ create table Museu.Ronda_log
    constraint PK_Ronda_logs primary key (ID)
 );
 
-create table Museu.RondaPlaneada_log
+create table Main.RondaPlaneada_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -197,7 +197,7 @@ create table Museu.RondaPlaneada_log
    constraint PK_RondaPlaneada_log primary key (ID)
 );
  
-create table Museu.RondaExtra_log
+create table Main.RondaExtra_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -213,7 +213,7 @@ create table Museu.RondaExtra_log
    constraint PK_RondaExtra_log primary key (ID)
 );
 
-create table Museu.Sensores_log
+create table Main.Sensores_log
 (
    op   char(30)   null,
    opUser   char(20)   null,
@@ -234,7 +234,7 @@ create table Museu.Sensores_log
    constraint PK_Sensores_log primary key (ID)
 );
 
-create table Museu.Medicoes_log
+create table Main.Medicoes_log
 (
    op   char(30)   null,
    opUser   char(20)   null,

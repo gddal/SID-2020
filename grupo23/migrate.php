@@ -14,34 +14,35 @@
  * @author Pedro Jones 82946
  * @author Dmytro Astashov 74278
  * @author Vitor Manuel Figueira Canhão 73788
- * @version 0.11
+ * @version 0.21
  *
  * Migração em PHP
  *
  */
 
-$tb_list = array('User_log', 'Grupo_log', 'Ronda_log', 'RondaPlaneada_log', 'RondaExtra_log', 'Sensores_log', 'Medicoes_log');
-
 $host_source = 'localhost';
 $host_target = 'localhost';
-$db_source = 'Museu';
-$db_target = 'Auditor';
+$db_source = 'main';
+$db_target = 'log';
 $user = 'system';
 $password = 'password';
 
-$DEBUG = true;
+$GLOBALS['DEBUG']=true;
 
 $conn_source = db_connect($host_source, $user, $password, $db_source);
 $conn_target = db_connect($host_target, $user, $password, $db_target);
 
+$tb_list = table_list($conn_target);
+
 foreach ($tb_list as $table) {
 
+    if ($GLOBALS['DEBUG']) echo "Copy from $db_source.$table to $db_target.$table" . PHP_EOL;
     $max_id = max_id($conn_target, $table);
+    if ($GLOBALS['DEBUG']) echo "Query : SELECT * FROM $table WHERE ID > $max_id" . PHP_EOL;
     $result = mysqli_query($conn_source, "SELECT * FROM $table WHERE ID > $max_id");
-    if ($DEBUG) echo "Query : SELECT * FROM $table WHERE ID > $max_id" . PHP_EOL;
     while ($row = mysqli_fetch_assoc($result)) {
         $sql = "INSERT INTO $table (" . implode(", ", array_keys($row)) . ") VALUES ('" . implode("', '", array_values($row)) . "');";
-        if ($DEBUG) echo "Insert : $sql" . PHP_EOL;
+        if ($GLOBALS['DEBUG']) echo "Insert : $sql" . PHP_EOL;
         mysqli_query($conn_target, str_replace("''", "null", $sql));
     }
 }
@@ -98,7 +99,30 @@ function max_id($connection, $table)
  */
 function empty_table($connection, $table)
 {
-
     $result = mysqli_query($connection, "SELECT * FROM $table LIMIT 1");
-    return (mysqli_num_rows($result) > 0) ? false : true;;
+    if (!$result) {
+        die("Error: " . mysqli_error($connection));
+    }
+    return (mysqli_num_rows($result) > 0) ? false : true;
+}
+
+/**
+ * 
+ * Table list.
+ * 
+ * Gera uma lista das tabelas de log
+ * 
+ */
+function table_list($connection)
+{
+    $table = array();
+    $result = mysqli_query($connection, "SHOW TABLES");
+    if (!$result) {
+        die("Error: " . mysqli_error($connection));
+    }    
+    while ($tbl = mysqli_fetch_array($result)) {
+        $table[] = $tbl[0];
+        if ($GLOBALS['DEBUG']) echo "Table : $tbl[0]" . PHP_EOL;
+    }
+    return ($table);
 }

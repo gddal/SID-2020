@@ -1,31 +1,24 @@
-DROP procedure IF EXISTS `Museu`.`select_user`;
 
-USE `Museu`;
 DELIMITER $$
+USE `Main`$$
+DROP procedure IF EXISTS `select_user`$$
 CREATE PROCEDURE `select_user`()
 BEGIN
   INSERT INTO User_log ( op, opUser, opData ) VALUES( 'select', current_user(), now() );
   SELECT ID,Grupo_ID,username,email,nome,apelido from User;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`select_user_id`;
-
-USE `Museu`;
-DELIMITER $$
+USE `Main`$$
+DROP procedure IF EXISTS `Main`.`select_user_id`$$
 CREATE PROCEDURE `select_user_id`(IN in_ID   Integer)
 BEGIN
   INSERT INTO User_log ( op, opUser, opData, User_Id ) VALUES( 'select', current_user(), now(), in_ID );
   SELECT ID,Grupo_ID,username,email,nome,apelido from User Where ID = in_ID;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`inserir_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `inserir_user`$$
 CREATE PROCEDURE `inserir_user`(
   IN in_Grupo_ID  char(20),
   IN in_username   char(20),
@@ -42,12 +35,8 @@ BEGIN
   END IF;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`create_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `create_user`$$
 CREATE PROCEDURE `create_user`(IN username varchar(100), IN pwd varchar(255))
 BEGIN
   SET @createUserCMD = concat('CREATE USER ''', username, '''@''', 'localhost', ''' IDENTIFIED BY ''', pwd, ''';');
@@ -56,12 +45,8 @@ BEGIN
   DEALLOCATE PREPARE createUserStatement;   
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`grant_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `grant_user`$$
 CREATE PROCEDURE `grant_user`(IN username varchar(100), IN grupo  char(20))
 BEGIN
   SET @grantUserCMD = concat('GRANT ''', grupo ,''' TO ''', username, '''@''', 'localhost', ''';');
@@ -70,12 +55,8 @@ BEGIN
   DEALLOCATE PREPARE grantUserStatement;   
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`apagar_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `apagar_user`$$
 CREATE PROCEDURE `apagar_user`(
   IN in_ID  Integer
   )
@@ -87,12 +68,8 @@ BEGIN
   END IF;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`delete_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `delete_user`$$
 CREATE PROCEDURE `delete_user`(IN username varchar(100))
 BEGIN
   SET @deleteUserCMD = concat('DROP USER IF EXISTS ''', username, '''@''', 'localhost', ''';');
@@ -101,12 +78,8 @@ BEGIN
   DEALLOCATE PREPARE deleteUserStatement;   
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`editar_user`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `editar_user`$$
 CREATE PROCEDURE `editar_user`(
   IN in_ID  Integer,
   IN in_email   char(50),
@@ -117,12 +90,8 @@ BEGIN
   UPDATE User SET email=in_email,nome=in_nome,apelido=in_apelido WHERE ID=in_ID;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`mudar_password`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `mudar_password`$$
 CREATE PROCEDURE `mudar_password`(
   IN username varchar(100),
   IN pwd varchar(255)
@@ -134,12 +103,8 @@ BEGIN
   DEALLOCATE PREPARE passwordUserStatement;   
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`ackowledge_sensor`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `ackowledge_sensor`$$
 CREATE PROCEDURE `ackowledge_sensor`(
   IN in_ID  Integer
   )
@@ -147,12 +112,8 @@ BEGIN
   UPDATE Sensores SET senAck=true WHERE ID=in_ID;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`actualizar_sensor`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `actualizar_sensor`$$
 CREATE PROCEDURE `actualizar_sensor`(
   IN in_ID  Integer,
   IN in_senAviso  Integer,
@@ -164,12 +125,8 @@ BEGIN
   UPDATE Sensores SET senAviso=in_senAviso, senAlarme=in_senAlarme, senLeituras=in_senLeituras WHERE ID=in_ID;
 END$$
 
-DELIMITER ;
 
-DROP procedure IF EXISTS `Museu`.`ronda_extra`;
-
-USE `Museu`;
-DELIMITER $$
+DROP procedure IF EXISTS `ronda_extra`$$
 CREATE PROCEDURE `ronda_extra`(
   IN in_ID  Integer  
   )
