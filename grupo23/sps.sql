@@ -30,31 +30,16 @@ CREATE PROCEDURE `inserir_user`(
 BEGIN
   IF NOT EXISTS (SELECT * FROM User WHERE username = in_username) THEN
     INSERT INTO User ( Grupo_ID,username,email,nome,apelido ) VALUES( in_Grupo_ID,in_username,in_email,in_nome,in_apelido );
-    CALL create_user(in_username, in_pwd);
-    CALL grant_user(in_username, in_Grupo_ID);
+    SET @createUserCMD = concat('CREATE USER ''', in_username, '''@''', 'localhost', ''' IDENTIFIED BY ''', in_pwd, ''';');
+    PREPARE createUserStatement FROM @createUserCMD;
+    EXECUTE createUserStatement;
+    DEALLOCATE PREPARE createUserStatement;   
+    SET @grantUserCMD = concat('GRANT ''', in_Grupo_ID ,''' TO ''', in_username, '''@''', 'localhost', ''';');
+    PREPARE grantUserStatement FROM @grantUserCMD;
+    EXECUTE grantUserStatement;
+    DEALLOCATE PREPARE grantUserStatement;   
   END IF;
 END$$
-
-
-DROP procedure IF EXISTS `create_user`$$
-CREATE PROCEDURE `create_user`(IN username varchar(100), IN pwd varchar(255))
-BEGIN
-  SET @createUserCMD = concat('CREATE USER ''', username, '''@''', 'localhost', ''' IDENTIFIED BY ''', pwd, ''';');
-  PREPARE createUserStatement FROM @createUserCMD;
-  EXECUTE createUserStatement;
-  DEALLOCATE PREPARE createUserStatement;   
-END$$
-
-
-DROP procedure IF EXISTS `grant_user`$$
-CREATE PROCEDURE `grant_user`(IN username varchar(100), IN grupo  char(20))
-BEGIN
-  SET @grantUserCMD = concat('GRANT ''', grupo ,''' TO ''', username, '''@''', 'localhost', ''';');
-  PREPARE grantUserStatement FROM @grantUserCMD;
-  EXECUTE grantUserStatement;
-  DEALLOCATE PREPARE grantUserStatement;   
-END$$
-
 
 DROP procedure IF EXISTS `apagar_user`$$
 CREATE PROCEDURE `apagar_user`(
@@ -64,20 +49,12 @@ BEGIN
   IF EXISTS (SELECT * FROM User WHERE ID = in_ID) THEN
     SELECT username INTO @login FROM User WHERE ID = in_ID;
     DELETE FROM User WHERE ID=in_ID;
-    CALL delete_user(@login);
+    SET @deleteUserCMD = concat('DROP USER IF EXISTS ''', @login, '''@''', 'localhost', ''';');
+    PREPARE deleteUserStatement FROM @deleteUserCMD;
+    EXECUTE deleteUserStatement;
+    DEALLOCATE PREPARE deleteUserStatement;   
   END IF;
 END$$
-
-
-DROP procedure IF EXISTS `delete_user`$$
-CREATE PROCEDURE `delete_user`(IN username varchar(100))
-BEGIN
-  SET @deleteUserCMD = concat('DROP USER IF EXISTS ''', username, '''@''', 'localhost', ''';');
-  PREPARE deleteUserStatement FROM @deleteUserCMD;
-  EXECUTE deleteUserStatement;
-  DEALLOCATE PREPARE deleteUserStatement;   
-END$$
-
 
 DROP procedure IF EXISTS `editar_user`$$
 CREATE PROCEDURE `editar_user`(
@@ -93,11 +70,10 @@ END$$
 
 DROP procedure IF EXISTS `mudar_password`$$
 CREATE PROCEDURE `mudar_password`(
-  IN username varchar(100),
   IN pwd varchar(255)
   )
 BEGIN
-  SET @passwordUserCMD = concat('SET PASSWORD FOR ''', username, '''@''', 'localhost', ''' = PASSWORD(''', pwd, ''');');
+  SET @passwordUserCMD = concat('SET PASSWORD FOR ''', current_user(), '''@''', 'localhost', ''' = PASSWORD(''', pwd, ''');');
   PREPARE passwordUserStatement FROM @passwordUserCMD;
   EXECUTE passwordUserStatement;
   DEALLOCATE PREPARE passwordUserStatement;   
