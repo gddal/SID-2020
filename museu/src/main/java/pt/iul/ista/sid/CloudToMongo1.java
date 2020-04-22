@@ -16,7 +16,7 @@ import java.io.*;
 import javax.swing.*;
 
 
-public class CloudToMongo implements MqttCallback {
+public class CloudToMongo1 implements MqttCallback {
     MqttClient mqttclient;
     static MongoClient mongoClient;
     static DB db;
@@ -42,8 +42,8 @@ public class CloudToMongo implements MqttCallback {
             System.out.println("Error reading CloudToMongo.ini file " + e);
             JOptionPane.showMessageDialog(null, "The CloudToMongo.inifile wasn't found.", "CloudToMongo", JOptionPane.ERROR_MESSAGE);
         }
-        new CloudToMongo().connecCloud();
-        new CloudToMongo().connectMongo();
+        new CloudToMongo1().connecCloud();
+        new CloudToMongo1().connectMongo();
     }
 
     public void connecCloud() {
