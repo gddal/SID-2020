@@ -1,0 +1,3 @@
+- Alteração do SP mudar_password para permitir apenas alterar para o utilizador actual (current_user).
+- Alteração do SP apagar_user por razões de segurança passa também a apagar o login no SQL deixando de existir o SP delete_user.
+- Alteração do SP inserir_user por razões de segurança passa também a criar o login no SQL e a atribuir o role deixando de existir os SP create_user e grant_user.
