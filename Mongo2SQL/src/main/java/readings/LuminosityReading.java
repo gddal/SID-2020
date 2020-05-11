@@ -13,6 +13,11 @@ public class LuminosityReading extends Reading {
 		
 	}
 
+
+	public int getLuminosity() {
+		return Luminosity;
+	}
+
 	
 	
 	

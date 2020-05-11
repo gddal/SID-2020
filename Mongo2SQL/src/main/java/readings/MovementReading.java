@@ -13,6 +13,11 @@ public class MovementReading extends Reading {
 		
 	}
 
+
+	public int getMovement() {
+		return movement;
+	}
+
 	
 	
 	

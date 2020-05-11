@@ -13,6 +13,16 @@ public abstract class Reading {
 	}
 
 
+	public String getId() {
+		return id;
+	}
+
+
+	public String getDatime() {
+		return datime;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Reading [id=" + id + ", datime=" + datime + "]";

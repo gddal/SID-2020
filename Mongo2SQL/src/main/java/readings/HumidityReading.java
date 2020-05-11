@@ -13,6 +13,11 @@ public class HumidityReading extends Reading {
 		
 	}
 
+
+	public double getHumidity() {
+		return humidity;
+	}
+
 	
 	
 	

@@ -1,5 +1,6 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -8,7 +9,7 @@ import utils.G23Utils;
 public class SettingsLoader {
 
 
-	private final String INIFILEPATH = "Mongo2SQL.ini";
+	private final static String INIFILEPATH = "Mongo2SQL.ini";
 	
 	private final static String DEFAULTMONGOURI = "mongodb://root:password@127.0.0.1:27017/?authSource=admin";
 	private final static String DEFAULTMONGODB = "sid";
@@ -18,7 +19,8 @@ public class SettingsLoader {
 	private final static String DEFAULTNUMBEROFREADS = "5|5|5|5";
 	//mongodb collection name # mongodb field name # sensor type | .......
 	private final static String DEFAULTSTRINGSLIST = "temperatures#tmp#Temperature|humidity#hum#Humidity|movement#mov#Movement|luminosity#lum#Luminosity";
-	private final static String DEFAULTEWMAWEIGHT = "0.2";
+	private final static String DEFAULTEWMAWEIGHT = "0.2|0.2|0.2|0.2";
+	private final static String DEFAULTEWMAINITVALUE = "20.0|20.0|20.0|20.0";
 
 
 	private static String mongoURI = DEFAULTMONGOURI;
@@ -30,9 +32,10 @@ public class SettingsLoader {
 	private static String[] dbStrings = DEFAULTSTRINGSLIST.split("\\|");
 	
 	
-	private static double ewmaWeight = Double.parseDouble(DEFAULTEWMAWEIGHT);
+	private static double[] ewmaWeight = G23Utils.parseDoublearray((DEFAULTEWMAWEIGHT.split("\\|")));
+	private static double[] ewmaInitialValue = G23Utils.parseDoublearray(DEFAULTEWMAINITVALUE.split("\\|"));
 	
-	private Properties p;
+	private static Properties p;
 
 	public SettingsLoader(){
 		p = new Properties();
@@ -46,7 +49,9 @@ public class SettingsLoader {
 	private void readFile() {
 
 		try {
-			p.load(new FileInputStream(INIFILEPATH));
+			FileInputStream in = new FileInputStream(INIFILEPATH);
+			p.load(in);
+			
 			mongoURI = p.getProperty("URI", DEFAULTMONGOURI);
 			System.out.println(mongoURI); //TODO Remove this
 			dbName = p.getProperty("MongoDBName", DEFAULTMONGODB);
@@ -55,7 +60,10 @@ public class SettingsLoader {
 			numberReads = G23Utils.parseIntarray(p.getProperty("NumberofReads",DEFAULTNUMBEROFREADS).split("\\|"));
 			dbStrings = p.getProperty("StringList", DEFAULTSTRINGSLIST).split("\\|");
 			
-			ewmaWeight = Double.parseDouble(p.getProperty("EWMAWeight",DEFAULTEWMAWEIGHT));
+			ewmaWeight = G23Utils.parseDoublearray(p.getProperty("EWMAWeight",DEFAULTEWMAWEIGHT).split("\\|"));
+			ewmaInitialValue = G23Utils.parseDoublearray(p.getProperty("EWMAInitialValue",DEFAULTEWMAINITVALUE).split("\\|"));
+
+			in.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,11 +71,28 @@ public class SettingsLoader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
 
 	}
 
 
+	public static void setewmaInitialValue() {
+		try {
+			FileOutputStream out = new FileOutputStream(INIFILEPATH);
+			String str = ReadingLists.returnLastTemperatureValue() + "|" + ReadingLists.returnLastHumidityValue() + "|" + ReadingLists.returnLastMovementValue() + "|" + ReadingLists.returnLastLuminosityValue();
+	
+			p.setProperty("EWMAInitialValue", str);
+			p.store(out, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		
+		
+		
+	}
 
 
 	public static String getmongoURI() {
@@ -95,9 +120,15 @@ public class SettingsLoader {
 	}
 	
 	
-	public static double getEwmaWeight() {
+	public static double[] getEwmaWeight() {
 		return ewmaWeight;
 	}
+	
+	public static double[] getEwmaInitialValue() {
+		return ewmaInitialValue;
+	}
+
+
 
 }
 

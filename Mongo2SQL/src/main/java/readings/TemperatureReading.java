@@ -12,11 +12,17 @@ public class TemperatureReading extends Reading {
 
 		
 	}
+	
 
 
 	@Override
 	public String toString() {
 		return "TemperatureReading [temperature=" + temperature + " " + super.toString() + "]";
+	}
+
+
+	public double getTemperature() {
+		return temperature;
 	}
 
 	
