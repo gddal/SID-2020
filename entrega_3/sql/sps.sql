@@ -27,23 +27,25 @@ END$$
 DROP procedure IF EXISTS `inserir_sensor`$$
 CREATE PROCEDURE `inserir_sensor`(
   IN in_ID  varchar(3),
+  IN in_senMin   DECIMAL(6,2),  
   IN in_senAviso  DECIMAL(6,2),
-  IN in_senAlarme  DECIMAL(6,2)  
+  IN in_senAlarme  DECIMAL(6,2)
   )
 BEGIN
   IF NOT EXISTS (SELECT * FROM Sensores WHERE ID = in_ID) THEN
-    INSERT INTO Sensores (ID,senAviso,senAlarme) VALUES(in_ID,in_senAviso,in_senAlarme);
+    INSERT INTO Sensores (ID,senMin,senAviso,senAlarme) VALUES(in_ID,in_senMin,in_senAviso,in_senAlarme);
   END IF;
 END$$
 
 DROP procedure IF EXISTS `actualizar_sensor`$$
 CREATE PROCEDURE `actualizar_sensor`(
   IN in_ID  varchar(3),
+  IN in_senMin   DECIMAL(6,2),  
   IN in_senAviso  DECIMAL(6,2),
   IN in_senAlarme  DECIMAL(6,2) 
   )
 BEGIN
-  UPDATE Sensores SET senAviso=in_senAviso, senAlarme=in_senAlarme WHERE ID = in_ID;
+  UPDATE Sensores SET senMin=in_senMin, senAviso=in_senAviso, senAlarme=in_senAlarme WHERE ID = in_ID;
 END$$
 
 DROP procedure IF EXISTS `ronda_extra`$$
