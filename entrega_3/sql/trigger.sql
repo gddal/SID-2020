@@ -1,13 +1,10 @@
-DELIMITER $$
-USE `Main`$$
-
-DROP TRIGGER IF EXISTS `medicoes_insert`$$
-CREATE TRIGGER `main`.`medicoes_insert` AFTER INSERT ON `medicoes`
+CREATE DEFINER=`root`@`localhost` TRIGGER `main`.`medicoes_insert` AFTER INSERT ON `medicoes`
 FOR EACH ROW
 BEGIN
 SET @valAlarme = (SELECT senAlarme FROM sensores WHERE sensores.ID = NEW.TipoSensor);
+SET @valMin = (SELECT senMin FROM sensores WHERE sensores.ID = NEW.TipoSensor);
 IF (NEW.TipoSensor = 'tmp' OR NEW.TipoSensor = 'hum') THEN
-    IF (NEW.valor > @valAlarme) THEN
+    IF (NEW.valor > @valAlarme OR NEW.valor < @valMin) THEN
         INSERT INTO alerta(
             DataHoraMedicao, 
             TipoSensor, 
@@ -42,8 +39,8 @@ IF (NEW.TipoSensor = 'tmp' OR NEW.TipoSensor = 'hum') THEN
 		END IF;
 	END IF;
 ELSE
-	IF NOT EXISTS (SELECT dataInicio FROM rondaextra WHERE current_time() >= rondaextra.dataInicio AND current_time() <= rondaextra.dataFim) THEN
-		IF NOT EXISTS (SELECT inicio FROM ronda WHERE current_time() >= ronda.inicio AND current_time() <= ronda.fim) THEN 
+	IF EXISTS (SELECT * FROM rondaextra WHERE dataFim IS NULL) THEN
+		IF NOT EXISTS (SELECT data FROM rondaplaneada WHERE current_date() = data AND current_time() >= Ronda_inicio AND current_time() <= fim) THEN 
 			IF (NEW.valor >= @valAlarme) THEN
 				INSERT INTO alerta(
 					DataHoraMedicao, 
@@ -63,4 +60,4 @@ ELSE
 		END IF;
 	END IF;
 END IF;
-END$$
+END
