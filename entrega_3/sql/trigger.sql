@@ -1,4 +1,9 @@
-CREATE DEFINER=`root`@`localhost` TRIGGER `main`.`medicoes_insert` AFTER INSERT ON `medicoes`
+DELIMITER $$
+USE `Main`$$
+
+DROP TRIGGER IF EXISTS `medicoes_insert`$$
+
+CREATE TRIGGER `medicoes_insert` AFTER INSERT ON `medicoes`
 FOR EACH ROW
 BEGIN
 SET @valAlarme = (SELECT senAlarme FROM sensores WHERE sensores.ID = NEW.TipoSensor);
@@ -60,4 +65,4 @@ ELSE
 		END IF;
 	END IF;
 END IF;
-END
+END$$
