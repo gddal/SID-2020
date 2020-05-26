@@ -29,6 +29,7 @@ GRANT SELECT ON Main.Medicoes TO Che;
 
 GRANT SELECT ON Main.Alerta TO Dir;
 GRANT SELECT ON Main.Alerta TO Che;
+GRANT SELECT ON Main.Alerta TO Adm;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON Main.Sensores TO Adm;
 
@@ -36,18 +37,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON Main.Sensores TO Adm;
 GRANT EXECUTE ON PROCEDURE Main.ronda_extra TO Seg;
 
 GRANT EXECUTE ON PROCEDURE Main.inserir_user TO Adm;
-
-GRANT EXECUTE ON PROCEDURE Main.apagar_user TO Adm;
-
-GRANT EXECUTE ON PROCEDURE Main.editar_user TO Adm;
-GRANT EXECUTE ON PROCEDURE Main.editar_user TO Dir;
-GRANT EXECUTE ON PROCEDURE Main.editar_user TO Che;
-GRANT EXECUTE ON PROCEDURE Main.editar_user TO Seg;
-
-GRANT EXECUTE ON PROCEDURE Main.mudar_password TO Adm;
-GRANT EXECUTE ON PROCEDURE Main.mudar_password TO Dir;
-GRANT EXECUTE ON PROCEDURE Main.mudar_password TO Che;
-GRANT EXECUTE ON PROCEDURE Main.mudar_password TO Seg;
 
 GRANT EXECUTE ON PROCEDURE Main.inserir_sensor TO Adm;
 GRANT EXECUTE ON PROCEDURE Main.actualizar_sensor TO Adm;
