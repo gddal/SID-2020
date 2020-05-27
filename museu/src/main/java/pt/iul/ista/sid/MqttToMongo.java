@@ -19,22 +19,22 @@ import com.mongodb.*;
 import com.mongodb.util.JSON;
 
 /**
- *
- * Trabalho final da UC de Sistemas de Informação Distribuídos 2020
- * 
- * Grupo 23
- * 
- * Classe de entrada da Aplicação do cliente.
- *
- * @author Miguel Diaz Gonçalves 82493
- * @author Gonçalo Dias do Amaral 83380
- * @author Dmytro Astashov 74278
- * @author André Freitas 82361
- * @author Pedro Jones 82946
- * @author Vitor Canhão 73788
- * @version 0.11
- *
- */
+*
+* Trabalho final da UC de Sistemas de Informacao Distribuidos 2020
+* 
+* Grupo 23
+* 
+* Classe de entrada da Aplicacao do cliente.
+*
+* @author Miguel Diaz GonÃ§alves 82493
+* @author GonÃ§alo Dias do Amaral 83380
+* @author Dmytro Astashov 74278
+* @author AndrÃ© Freitas 82361
+* @author Pedro Jones 82946
+* @author Vitor CanhÃ£o 73788
+* @version 0.11
+*
+*/
 public class MqttToMongo implements MqttCallback {
 
 	// Startup configuration file
@@ -137,7 +137,7 @@ public class MqttToMongo implements MqttCallback {
 
 	/**
 	 * 
-	 * connectionLost Invocado quando é perdida a ligação ao broker MQTT.
+	 * connectionLost Invocado quando ï¿½ perdida a ligaï¿½ï¿½o ao broker MQTT.
 	 * 
 	 */
 	@Override
@@ -149,7 +149,7 @@ public class MqttToMongo implements MqttCallback {
 
 	/**
 	 * 
-	 * messageArrived Invocado quando uma mensagem é recebida no topico subscrito.
+	 * messageArrived Invocado quando uma mensagem ï¿½ recebida no topico subscrito.
 	 * 
 	 */
 	@Override
@@ -167,7 +167,7 @@ public class MqttToMongo implements MqttCallback {
 
 	/**
 	 * 
-	 * deliveryComplete Invocado quando uma mensagem é enviada com sucesso.
+	 * deliveryComplete Invocado quando uma mensagem ï¿½ enviada com sucesso.
 	 * 
 	 */
 	@Override
