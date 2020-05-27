@@ -6,7 +6,7 @@
 	$result_query_select = mysqli_query($conn, $query_select); 
 	$conn->next_result();
 	$administrador = mysqli_fetch_assoc($result_query_select)['current_role()'];
-	if($administrador == "Administradores") { // Alterar role se necessario
+	if($administrador == "Administradores" or $administrador == "Directores" or $administrador == "Chefes") { // Alterar role se necessario
 		$response["valid"] = array();
 		$json = json_encode($response["valid"]);
 		echo $json;
