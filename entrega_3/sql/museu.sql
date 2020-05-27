@@ -6,7 +6,7 @@ drop table if exists Main.Ronda ;
 drop table if exists Main.RondaExtra ;
 drop table if exists Main.RondaPlaneada ;
 drop table if exists Main.Sensores ;
-drop table if exists Main.Medicoes ;
+drop table if exists Main.MedicoesSensores;
 drop table if exists Main.Alerta ;
  
 create table Main.User
@@ -68,12 +68,12 @@ create table Main.Sensores
    constraint PK_Sensores primary key (ID)
 );
 
-create table Main.Medicoes
+create table Main.MedicoesSensores
 (
    ID   Integer   not null auto_increment,
    TipoSensor   varchar(3)   null,
-   valor   decimal(6,2)   null,
-   datahora   timestamp   null,
+   ValorMedicao   decimal(6,2)   null,
+   DataHoraMedicao   timestamp   null,
  
    constraint PK_Medicoes primary key (ID)
 ); 
@@ -119,7 +119,7 @@ alter table Main.RondaExtra
    on update cascade
 ;
   
-alter table Main.Medicoes
+alter table Main.MedicoesSensores
    add constraint FK_Medicoes_noname_Sensores foreign key (TipoSensor)
    references Sensores(ID)
    on delete restrict
@@ -132,9 +132,3 @@ alter table Main.Alerta
    on delete restrict
    on update cascade
 ;
-
-INSERT INTO Main.Grupo (nome,descricao) VALUES ('Adm','Administrador' );
-INSERT INTO Main.Grupo (nome,descricao) VALUES ('Dir','Diretor do museu' );
-INSERT INTO Main.Grupo (nome,descricao) VALUES ('Che','Chefe de segurança' );
-INSERT INTO Main.Grupo (nome,descricao) VALUES ('Seg','Segurança' );
-INSERT INTO Main.Grupo (nome,descricao) VALUES ('Aud','Auditor' );

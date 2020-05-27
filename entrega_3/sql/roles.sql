@@ -2,43 +2,36 @@ DROP USER IF EXISTS system;
 CREATE USER system IDENTIFIED BY 'pass';
 GRANT ALL PRIVILEGES ON Main.* TO system;
 
-DROP ROLE IF EXISTS Adm;
-DROP ROLE IF EXISTS Dir;
-DROP ROLE IF EXISTS Che;
-DROP ROLE IF EXISTS Seg;
-DROP ROLE IF EXISTS Aud;
+DROP ROLE IF EXISTS Administradores;
+DROP ROLE IF EXISTS Directores;
+DROP ROLE IF EXISTS Chefes;
+DROP ROLE IF EXISTS Segurancas;
 
-CREATE ROLE Adm;
-CREATE ROLE Dir;
-CREATE ROLE Che;
-CREATE ROLE Seg;
-CREATE ROLE Aud;
+CREATE ROLE Administradores;
+CREATE ROLE Directores;
+CREATE ROLE Chefes;
+CREATE ROLE Segurancas;
 
-GRANT SELECT ON Main.Ronda TO Seg;
-GRANT SELECT, INSERT, UPDATE, DELETE ON Main.Ronda TO Che;
+GRANT ALL PRIVILEGES ON Main.* TO Administradores;
 
-GRANT SELECT ON Main.RondaPlaneada TO Seg;
-GRANT SELECT, INSERT, UPDATE, DELETE ON Main.RondaPlaneada TO Che;
+GRANT SELECT ON Main.Ronda TO Segurancas;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Main.Ronda TO Chefes;
 
-GRANT SELECT ON Main.RondaExtra TO Che;
+GRANT SELECT ON Main.RondaPlaneada TO Segurancas;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Main.RondaPlaneada TO Chefes;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON Main.User TO Adm;
+GRANT SELECT, INSERT, UPDATE ON Main.RondaExtra TO Segurancas;
+GRANT SELECT ON Main.RondaExtra TO Chefes;
 
-GRANT SELECT ON Main.Medicoes TO Dir;
-GRANT SELECT ON Main.Medicoes TO Che;
+GRANT SELECT ON Main.medicoessensores TO Directores;
+GRANT SELECT ON Main.medicoessensores TO Chefes;
 
-GRANT SELECT ON Main.Alerta TO Dir;
-GRANT SELECT ON Main.Alerta TO Che;
-GRANT SELECT ON Main.Alerta TO Adm;
+GRANT SELECT ON Main.Alerta TO Directores;
+GRANT SELECT ON Main.Alerta TO Chefes;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON Main.Sensores TO Adm;
-
-
-GRANT EXECUTE ON PROCEDURE Main.ronda_extra TO Seg;
-
-GRANT EXECUTE ON PROCEDURE Main.inserir_user TO Adm;
-
-GRANT EXECUTE ON PROCEDURE Main.inserir_sensor TO Adm;
-GRANT EXECUTE ON PROCEDURE Main.actualizar_sensor TO Adm;
+GRANT EXECUTE ON PROCEDURE Main.inserir_user TO Administradores;
+GRANT EXECUTE ON PROCEDURE Main.inserir_sensor TO Administradores;
+GRANT EXECUTE ON PROCEDURE Main.actualizar_sensor TO Administradores;
+GRANT EXECUTE ON PROCEDURE Main.ronda_extra TO Segurancas;
 
 FLUSH PRIVILEGES;

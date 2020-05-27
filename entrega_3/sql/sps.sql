@@ -1,4 +1,4 @@
-
+inserir_user
 DELIMITER $$
 USE `Main`$$
 DROP procedure IF EXISTS `inserir_user`$$
@@ -13,14 +13,26 @@ CREATE PROCEDURE `inserir_user`(
 BEGIN
   IF NOT EXISTS (SELECT * FROM User WHERE username = in_username) THEN
     INSERT INTO User ( Grupo_ID,username,email,nome,apelido ) VALUES( in_Grupo_ID,in_username,in_email,in_nome,in_apelido );
+
+    SET @dropUserCMD = concat('DROP USER IF EXISTS ''', in_username, ''';');
+    PREPARE dropUserStatement FROM @dropUserCMD;
+    EXECUTE dropUserStatement;
+    DEALLOCATE PREPARE dropUserStatement;   
+
     SET @createUserCMD = concat('CREATE USER ''', in_username, ''' IDENTIFIED BY ''', in_pwd, ''';');
     PREPARE createUserStatement FROM @createUserCMD;
     EXECUTE createUserStatement;
     DEALLOCATE PREPARE createUserStatement;   
+
     SET @grantUserCMD = concat('GRANT ''', in_Grupo_ID ,''' TO ''', in_username, ''';');
     PREPARE grantUserStatement FROM @grantUserCMD;
     EXECUTE grantUserStatement;
     DEALLOCATE PREPARE grantUserStatement;   
+
+    SET @grantUserCMD = concat('SET DEFAULT ROLE ''', in_Grupo_ID ,''' FOR ''', in_username, ''';');
+    PREPARE grantDefaultRoleStatement FROM @grantUserCMD;
+    EXECUTE grantDefaultRoleStatement;
+    DEALLOCATE PREPARE grantDefaultRoleStatement;   
   END IF;
 END$$
 
