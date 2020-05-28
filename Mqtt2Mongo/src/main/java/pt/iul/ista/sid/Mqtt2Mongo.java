@@ -78,7 +78,7 @@ public class Mqtt2Mongo implements MqttCallback {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("MQTT to Mongo");
+		System.out.println("Mqtt2Mongo");
 
 		Properties pFile = new Properties();
 
