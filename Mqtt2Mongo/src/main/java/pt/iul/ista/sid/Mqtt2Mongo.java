@@ -42,7 +42,7 @@ import com.mongodb.util.JSON;
 public class Mqtt2Mongo implements MqttCallback {
 
 	// Startup configuration file
-	private static final String INI_FILE = "mqtt2Mongo.ini";
+	private static final String INI_FILE = "config.ini";
 	private static final String DATE_FORMAT = "dd/M/yyyy";
 	private static final String TIME_FORMAT = "H:m:s";
 
