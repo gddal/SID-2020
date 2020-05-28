@@ -38,6 +38,7 @@ import com.mongodb.util.JSON;
  * @version 0.11
  *
  */
+@SuppressWarnings("deprecation")
 public class Mqtt2Mongo implements MqttCallback {
 
 	// Startup configuration file
