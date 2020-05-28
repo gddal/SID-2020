@@ -160,7 +160,7 @@ public class MqttToMongo implements MqttCallback {
 		System.out.println("| Mensagem: " + message.toString());
 		System.out.println("-------------------------------------------------");
 		
-        DBObject document = (DBObject) JSON.parse(clean(message.toString()));
+        DBObject document = (DBObject) JSON.parse(clean(message.toString()));        
         sendToMongo(document);
 
 	}
@@ -186,7 +186,12 @@ public class MqttToMongo implements MqttCallback {
 		System.out.println("-------------------------------------------------");
 		System.out.println("| Message to MongoDB: "+ mongoServer);
 		System.out.println("| Database: " + mongoDatabase);
-		System.out.println("| Mensagem: " + document.toString());
+        if (document.containsKey("tmp")) {System.out.println("| Temperatura: " + document.get("tmp").toString());}
+        if (document.containsKey("hum")) {System.out.println("| Humidade: " + document.get("hum").toString());}
+        if (document.containsKey("cell")) {System.out.println("| Luminosidade: " + document.get("cell").toString());}
+        if (document.containsKey("mov")) {System.out.println("| Movimento: " + document.get("mov").toString());}
+        if (document.containsKey("dat")) {System.out.println("| Data: " + document.get("dat").toString());}
+        if (document.containsKey("tim")) {System.out.println("| Hora: " + document.get("tim").toString());}
 		System.out.println("-------------------------------------------------");
     	
     }
