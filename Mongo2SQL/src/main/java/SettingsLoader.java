@@ -9,12 +9,12 @@ import utils.G23Utils;
 public class SettingsLoader {
 
 
-	private final static String INIFILEPATH = "Mongo2SQL.ini";
+	private final static String INIFILEPATH = "config.ini";
 	
 	private final static String DEFAULTMONGOURI = "mongodb://root:password@127.0.0.1:27017/?authSource=admin";
 	private final static String DEFAULTMONGODB = "sid";
 	private final static String DEFAULTMONGOIDFIELD = "_id";
-	private final static String DEFAULTMONGODATETIMEFIELD = "datime";
+	private final static String DEFAULTMONGODATETIMEFIELD = "dat";
 	//Same order as DEFAULTSTRINGSLIST
 	private final static String DEFAULTNUMBEROFREADS = "5|5|5|5";
 	//mongodb collection name # mongodb field name # sensor type | .......
@@ -52,9 +52,9 @@ public class SettingsLoader {
 			FileInputStream in = new FileInputStream(INIFILEPATH);
 			p.load(in);
 			
-			mongoURI = p.getProperty("URI", DEFAULTMONGOURI);
+			mongoURI = p.getProperty("mongo_server", DEFAULTMONGOURI);
 			System.out.println(mongoURI); //TODO Remove this
-			dbName = p.getProperty("MongoDBName", DEFAULTMONGODB);
+			dbName = p.getProperty("mongo_database", DEFAULTMONGODB);
 			mongoIdField = p.getProperty("MongoIDField", DEFAULTMONGOIDFIELD);
 			mongoDateTimeField = p.getProperty("MongoDateTimeField", DEFAULTMONGODATETIMEFIELD);
 			numberReads = G23Utils.parseIntarray(p.getProperty("NumberofReads",DEFAULTNUMBEROFREADS).split("\\|"));
