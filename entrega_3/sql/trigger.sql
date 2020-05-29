@@ -18,7 +18,7 @@ IF (NEW.TipoSensor = 'tmp' OR NEW.TipoSensor = 'hum') THEN
             Descricao   
             )
         VALUES(
-            current_date(), 
+            CURRENT_TIMESTAMP(), 
             NEW.TipoSensor, 
             NEW.ValorMedicao, 
             @valAlarme,
@@ -35,7 +35,7 @@ IF (NEW.TipoSensor = 'tmp' OR NEW.TipoSensor = 'hum') THEN
 				Descricao
 				)
 			VALUES(
-				current_date(), 
+				CURRENT_TIMESTAMP(), 
 				NEW.TipoSensor, 
 				NEW.ValorMedicao, 
 				@valAviso,
@@ -55,7 +55,7 @@ ELSE
 					Descricao
 					)
 				VALUES(
-					current_date(), 
+					CURRENT_TIMESTAMP(), 
 					NEW.TipoSensor, 
 					NEW.ValorMedicao, 
 					@valAlarme,
