@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 
@@ -223,10 +225,12 @@ public class Mqtt2Mongo implements MqttCallback {
 	private void parseDocument(BasicDBObject document) {
 
 		boolean err = false;
-
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		try {	
+			Date data = formater.parse(document.get("dat")+ " " + document.get("tim"));
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
-				mongoTmp.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("tmp", document.get("tmp").toString()));
+				mongoTmp.insertOne(new BasicDBObject().append("datim", data ).append("tmp", document.get("tmp").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -235,7 +239,7 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("hum")) {
 			if (isNumeric(document.get("hum").toString())) {
-				mongoHum.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("hum", document.get("hum").toString()));
+				mongoHum.insertOne(new BasicDBObject().append("datim", data ).append("hum", document.get("hum").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -245,7 +249,7 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("cell")) {
 			if (isNumeric(document.get("cell").toString())) {
-				mongoCel.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("cel", document.get("cell").toString()));
+				mongoCel.insertOne(new BasicDBObject().append("datim", data ).append("cell", document.get("cell").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -255,11 +259,16 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("mov")) {
 			if (isNumeric(document.get("mov").toString())) {
-				mongoMov.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("mov", document.get("mov").toString()));
+				mongoMov.insertOne(new BasicDBObject().append("datim", data ).append("mov", document.get("mov").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
 			}
+		}
+		
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
