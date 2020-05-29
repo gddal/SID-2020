@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -237,13 +238,22 @@ public class Mqtt2Mongo implements MqttCallback {
 
 	}
 
+	private Date addHoursToJavaUtilDate(Date date, int hours) {
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.add(Calendar.HOUR_OF_DAY, hours);
+	    return calendar.getTime();
+	}
+	
 	private void parseDocument(BasicDBObject document) throws ParseException {
 
 		boolean err = false;
 		
 		SimpleDateFormat input = new SimpleDateFormat( DATE_FORMAT + " " + TIME_FORMAT );
 		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String newDateValue = output.format(input.parse(document.get("dat").toString() + " " + document.get("tim").toString()));
+		Date data = input.parse(document.get("dat").toString() + " " + document.get("tim").toString());
+		
+		String newDateValue = output.format(addHoursToJavaUtilDate(data,1));
 		
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
