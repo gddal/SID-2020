@@ -242,11 +242,9 @@ public class Mqtt2Mongo implements MqttCallback {
 		boolean err = false;
 		
 		SimpleDateFormat input = new SimpleDateFormat( DATE_FORMAT + " " + TIME_FORMAT );
-		SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String newDateValue = output.format(input.parse(document.get("dat").toString() + " " + document.get("tim").toString()));
 		
-		System.out.println("| new date: " + newDateValue);
-
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
 				mongoTmp.insertOne(new BasicDBObject().append("dat", newDateValue).append("tmp", document.get("tmp").toString()));
@@ -284,7 +282,7 @@ public class Mqtt2Mongo implements MqttCallback {
 				mongoErr.insertOne(document);
 			}
 		}
-		System.out.println("| finish: ");
+		
 	}
 
 	public String clean(String message) {
