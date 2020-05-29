@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
 
@@ -129,8 +130,19 @@ public class Mqtt2Mongo implements MqttCallback {
 	}
 
 	public void connectMongo() {
+		
 		mongoClient = new MongoClient(new MongoClientURI(mongoServer));
 		mongoDB = mongoClient.getDatabase(mongoDatabase);
+		
+		try {
+			mongoDB.createCollection(mongoTemperature);
+			mongoDB.createCollection(mongoHumidity);
+			mongoDB.createCollection(mongoLuminosity);
+			mongoDB.createCollection(mongoMotion);
+			mongoDB.createCollection(mongoErrors);
+	    } catch (MongoCommandException e) {
+	    }
+		
 		mongoTmp = mongoDB.getCollection(mongoTemperature, BasicDBObject.class);
 		mongoHum = mongoDB.getCollection(mongoHumidity, BasicDBObject.class);
 		mongoCel = mongoDB.getCollection(mongoLuminosity, BasicDBObject.class);
@@ -144,6 +156,10 @@ public class Mqtt2Mongo implements MqttCallback {
 	 * 
 	 */
 	public void connectionLost(Throwable cause) {
+		System.out.println("-------------------------------------------------");
+		System.out.println("| Connection lost!");
+		System.out.println("| Cause: " + cause);
+		System.out.println("-------------------------------------------------");
 		System.out.println("Connection lost!");
 	}
 
@@ -182,9 +198,10 @@ public class Mqtt2Mongo implements MqttCallback {
 	/**
 	 * 
 	 * send a documnet do MongoDB.
+	 * @throws ParseException 
 	 * 
 	 */
-	public void sendToMongo(MqttMessage message) {
+	public void sendToMongo(MqttMessage message) throws ParseException {
 
 		BasicDBObject document = (BasicDBObject) JSON.parse(clean(message.toString()));
 
@@ -220,13 +237,19 @@ public class Mqtt2Mongo implements MqttCallback {
 
 	}
 
-	private void parseDocument(BasicDBObject document) {
+	private void parseDocument(BasicDBObject document) throws ParseException {
 
 		boolean err = false;
+		
+		SimpleDateFormat input = new SimpleDateFormat( DATE_FORMAT + " " + TIME_FORMAT );
+		SimpleDateFormat output = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		String newDateValue = output.format(input.parse(document.get("dat").toString() + " " + document.get("tim").toString()));
+		
+		System.out.println("| new date: " + newDateValue);
 
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
-				mongoTmp.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("tmp", document.get("tmp").toString()));
+				mongoTmp.insertOne(new BasicDBObject().append("dat", newDateValue).append("tmp", document.get("tmp").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -235,7 +258,7 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("hum")) {
 			if (isNumeric(document.get("hum").toString())) {
-				mongoHum.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("hum", document.get("hum").toString()));
+				mongoHum.insertOne(new BasicDBObject().append("dat", newDateValue).append("hum", document.get("hum").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -245,7 +268,7 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("cell")) {
 			if (isNumeric(document.get("cell").toString())) {
-				mongoCel.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("cel", document.get("cell").toString()));
+				mongoCel.insertOne(new BasicDBObject().append("dat", newDateValue).append("cel", document.get("cell").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
@@ -255,12 +278,13 @@ public class Mqtt2Mongo implements MqttCallback {
 		
 		if (document.containsField("mov")) {
 			if (isNumeric(document.get("mov").toString())) {
-				mongoMov.insertOne(new BasicDBObject().append("dat", document.get("dat").toString()).append("tim", document.get("tim").toString()).append("mov", document.get("mov").toString()));
+				mongoMov.insertOne(new BasicDBObject().append("dat", newDateValue).append("mov", document.get("mov").toString()));
 			} else if (!err) {
 				err = true;
 				mongoErr.insertOne(document);
 			}
 		}
+		System.out.println("| finish: ");
 	}
 
 	public String clean(String message) {
