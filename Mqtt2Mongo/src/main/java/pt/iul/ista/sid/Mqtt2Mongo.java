@@ -253,7 +253,7 @@ public class Mqtt2Mongo implements MqttCallback {
 		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date data = input.parse(document.get("dat").toString() + " " + document.get("tim").toString());
 		
-		String newDateValue = output.format(addHoursToJavaUtilDate(data,1));
+		String newDateValue = output.format(addHoursToJavaUtilDate(data,1));// TODO
 		
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
