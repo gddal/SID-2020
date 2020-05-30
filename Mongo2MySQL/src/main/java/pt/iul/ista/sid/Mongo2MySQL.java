@@ -24,6 +24,7 @@ public class Mongo2MySQL {
 
 	// Startup configuration file
 	private static final String INI_FILE = "config.ini";
+	static Double EWMAWeight = 0.1;
 
 	private static final String INI_MONGO_SRV = "mongo_server";
 	private static final String INI_MONGO_DB = "mongo_database";
@@ -48,7 +49,6 @@ public class Mongo2MySQL {
 	static String MySQLDatabase;
 	static String MySQLUser;
 	static String MySQLPass;
-	static Double EWMAWeight = 0.1;
 
 	static MqttClient mqttClient;
 	static MongoClient mongoClient;
