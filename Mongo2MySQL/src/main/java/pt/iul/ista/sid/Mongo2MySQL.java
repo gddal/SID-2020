@@ -6,10 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -151,10 +148,9 @@ public class Mongo2MySQL {
 		lastMySQLDate = getLastMySQLRecord("mov").datatoString();
 		lastMongoDate = getMongoRecords("mov", lastMySQLDate, mongoMov);
 		if (lastMongoDate != null) {
-			ewma();
-			updateMySQL("mov", lastMongoDate, average());
+			correctMotion();
+			updateMySQL("mov", lastMongoDate, detectMotion());
 		}
-
 	}
 
 	private static String getMongoRecords(String tipoSensor, String data, MongoCollection<BasicDBObject> col)
@@ -235,6 +231,27 @@ public class Mongo2MySQL {
 			}
 		}
 		return med;
+	}
+
+	private static void correctMotion() {
+
+		for (int i = 0; i < medicoes.size() - 1; i++) {
+			if (medicoes.get(i).getValor() != 0 &&  medicoes.get(i).getValor() != 1) {
+				medicoes.get(i).setValor((double) 0);
+			}
+		}
+	}
+
+	private static double detectMotion() {
+
+		double total = 0;
+
+		for (int i = 0; i < medicoes.size(); i++) {
+			if (medicoes.get(i).getValor() == 1) {
+			total = 1;
+			}
+		}
+		return total;
 	}
 
 	private static void ewma() {
