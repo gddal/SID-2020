@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -81,7 +83,8 @@ public class Mqtt2Mongo implements MqttCallback {
 	public static void main(String[] args) {
 
 		System.out.println("Mqtt2Mongo");
-
+		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+		mongoLogger.setLevel(Level.WARNING); 
 		Properties pFile = new Properties();
 
 		try {
@@ -122,11 +125,16 @@ public class Mqtt2Mongo implements MqttCallback {
 		try {
 			i = new Random().nextInt(100000);
 			mqttClient = new MqttClient(mqttBroker, "CloudToMongo_" + String.valueOf(i) + "_" + mqttTopic);
+//			mqttClient.setConnectionTimeout(120);
 			mqttClient.connect();
 			mqttClient.setCallback(this);
 			mqttClient.subscribe(mqttTopic);
-		} catch (MqttException e) {
-			e.printStackTrace();
+		} catch (MqttException cause) {
+			System.out.println("-------------------------------------------------");
+			System.out.println("| Connection to mqtt failed!");
+			System.out.println("| Cause: " + cause.getMessage());
+			System.out.println("-------------------------------------------------");
+			System.out.println("Connection lost!");
 		}
 	}
 
@@ -159,7 +167,7 @@ public class Mqtt2Mongo implements MqttCallback {
 	public void connectionLost(Throwable cause) {
 		System.out.println("-------------------------------------------------");
 		System.out.println("| Connection lost!");
-		System.out.println("| Cause: " + cause);
+		System.out.println("| Cause: " + cause.getMessage());
 		System.out.println("-------------------------------------------------");
 		System.out.println("Connection lost!");
 	}
@@ -205,6 +213,8 @@ public class Mqtt2Mongo implements MqttCallback {
 	public void sendToMongo(MqttMessage message) throws ParseException {
 
 		BasicDBObject document = (BasicDBObject) JSON.parse(clean(message.toString()));
+		
+		System.out.println("| Mensagem: " + clean(message.toString()));
 
 		System.out.println("-------------------------------------------------");
 		System.out.println("| MongoDB server: " + mongoServer);
@@ -296,7 +306,7 @@ public class Mqtt2Mongo implements MqttCallback {
 	}
 
 	public String clean(String message) {
-		return (message.replaceAll("\"\"", "\","));
+		return (message.replaceAll("\"mov\":\"0\"", ",").replaceAll("\"sens\":\"eth\"", ""));
 
 	}
 

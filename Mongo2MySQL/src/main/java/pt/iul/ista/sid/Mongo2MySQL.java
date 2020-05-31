@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import com.mongodb.BasicDBObject;
@@ -67,7 +69,8 @@ public class Mongo2MySQL {
 	public static void main(String[] args) throws Throwable {
 
 		System.out.println("Mongo2MySQL");
-
+		Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+		mongoLogger.setLevel(Level.SEVERE); 
 		Properties pFile = new Properties();
 
 		try {
@@ -101,19 +104,6 @@ public class Mongo2MySQL {
 			System.out.println("Error reading " + INI_FILE + " file " + e);
 		}
 
-		sendToMySQL();
-
-	}
-
-	/**
-	 * 
-	 * send a documnets do MySQL.
-	 * 
-	 * @throws Throwable
-	 * 
-	 */
-	public static void sendToMySQL() throws Throwable {
-
 		mongoClient = new MongoClient(new MongoClientURI(mongoServer));
 		mongoDB = mongoClient.getDatabase(mongoDatabase);
 		mongoTmp = mongoDB.getCollection(mongoTemperature, BasicDBObject.class);
@@ -124,54 +114,57 @@ public class Mongo2MySQL {
 		String lastMongoDate;
 		String lastMySQLDate;
 
+		System.out.println("-------------------------------------------------");
 		// Temperatura
 		lastMySQLDate = getLastMySQLRecord("tmp");
-		lastMongoDate = getMongoRecords("tmp", lastMySQLDate, mongoTmp);
+		lastMongoDate = getMedicoes("tmp", lastMySQLDate, mongoTmp);
 		if (lastMongoDate != null) {
-			ewma();
-			updateMySQL("tmp", lastMongoDate, average());
+			calculateEWMA();
+			saveMedicoes("tmp", lastMongoDate, average());
 		}
 
 		// Humidity
 		lastMySQLDate = getLastMySQLRecord("hum");
-		lastMongoDate = getMongoRecords("hum", lastMySQLDate, mongoHum);
+		lastMongoDate = getMedicoes("hum", lastMySQLDate, mongoHum);
 		if (lastMongoDate != null) {
-			ewma();
-			updateMySQL("hum", lastMongoDate, average());
+			calculateEWMA();
+			saveMedicoes("hum", lastMongoDate, average());
 		}
 
 		// Luminosity
 		lastMySQLDate = getLastMySQLRecord("cel");
-		lastMongoDate = getMongoRecords("cel", lastMySQLDate, mongoCel);
+		lastMongoDate = getMedicoes("cel", lastMySQLDate, mongoCel);
 		if (lastMongoDate != null) {
-			ewma();
-			updateMySQL("cel", lastMongoDate, average());
+			calculateEWMA();
+			saveMedicoes("cel", lastMongoDate, average());
 		}
 
 		// Motion
 		lastMySQLDate = getLastMySQLRecord("mov");
-		lastMongoDate = getMongoRecords("mov", lastMySQLDate, mongoMov);
+		lastMongoDate = getMedicoes("mov", lastMySQLDate, mongoMov);
 		if (lastMongoDate != null) {
-			correctMotion();
-			updateMySQL("mov", lastMongoDate, detectMotion());
+			saveMedicoes("mov", lastMongoDate, detectMotion());
 		}
+		System.out.println("-------------------------------------------------");
+
 	}
 
-	private static String getMongoRecords(String tipoSensor, String data, MongoCollection<BasicDBObject> col)
+	private static String getMedicoes(String tipoSensor, String data, MongoCollection<BasicDBObject> col)
 			throws Throwable {
 
 		FindIterable<BasicDBObject> fi = col.find(Filters.gt("dat", data));
 		MongoCursor<BasicDBObject> cursor = fi.iterator();
-		BasicDBObject m = null;
+		System.out.print("| reading collection: " + col.getNamespace().getCollectionName());
+
 		medicoes.clear();
 		while (cursor.hasNext()) {
-			m = cursor.next();
-			medicoes.add(new Medicao(tipoSensor, m));
-		}
-		return (medicoes.isEmpty()) ? null : m.getString("dat");
+			medicoes.add(new Medicao(tipoSensor, cursor.next()));
+		}		
+		System.out.println(", found " + medicoes.size() + " new records");
+		return (medicoes.isEmpty()) ? null : medicoes.get(medicoes.size()).datatoString();
 	}
 
-	private static void updateMySQL(String tipoSensor, String data, double valor) {
+	private static void saveMedicoes(String tipoSensor, String data, double valor) {
 
 		Connection conn = null;
 		Statement stmt = null;
@@ -181,6 +174,7 @@ public class Mongo2MySQL {
 					+ MySQLUser + "&password=" + MySQLPass + "&serverTimezone=UTC");
 
 			stmt = conn.createStatement();
+			System.out.print("| write to mysql: " + data + " " + tipoSensor + " " + valor);
 			stmt.executeUpdate("INSERT INTO medicoessensores (TipoSensor,ValorMedicao,DataHoraMedicao) VALUES('"
 					+ tipoSensor + "','" + valor + "','" + data + "')");
 
@@ -237,28 +231,19 @@ public class Mongo2MySQL {
 		return output.format(lastdata).toString();
 	}
 
-	private static void correctMotion() {
-
-		for (int i = 0; i < medicoes.size() - 1; i++) {
-			if (medicoes.get(i).getValor() != 0 && medicoes.get(i).getValor() != 1) {
-				medicoes.get(i).setValor((double) 0);
-			}
-		}
-	}
-
 	private static double detectMotion() {
 
-		double total = 0;
+		double motion = 0;
 
 		for (int i = 0; i < medicoes.size(); i++) {
 			if (medicoes.get(i).getValor() == 1) {
-				total = 1;
+				motion = 1;
 			}
 		}
-		return total;
+		return motion;
 	}
 
-	private static void ewma() {
+	private static void calculateEWMA() {
 
 		for (int i = 0; i < medicoes.size() - 1; i++) {
 			medicoes.get(i + 1).setValor(round(
