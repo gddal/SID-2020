@@ -3,10 +3,14 @@ package pt.iul.ista.sid;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,7 +28,6 @@ public class Mongo2MySQL {
 
 	// Startup configuration file
 	private static final String INI_FILE = "config.ini";
-	static Double EWMAWeight = 0.1;
 
 	private static final String INI_MONGO_SRV = "mongo_server";
 	private static final String INI_MONGO_DB = "mongo_database";
@@ -49,6 +52,7 @@ public class Mongo2MySQL {
 	static String MySQLDatabase;
 	static String MySQLUser;
 	static String MySQLPass;
+	static Double EWMAWeight = 0.1;
 
 	static MqttClient mqttClient;
 	static MongoClient mongoClient;
@@ -121,7 +125,7 @@ public class Mongo2MySQL {
 		String lastMySQLDate;
 
 		// Temperatura
-		lastMySQLDate = getLastMySQLRecord("tmp").datatoString();
+		lastMySQLDate = getLastMySQLRecord("tmp");
 		lastMongoDate = getMongoRecords("tmp", lastMySQLDate, mongoTmp);
 		if (lastMongoDate != null) {
 			ewma();
@@ -129,7 +133,7 @@ public class Mongo2MySQL {
 		}
 
 		// Humidity
-		lastMySQLDate = getLastMySQLRecord("hum").datatoString();
+		lastMySQLDate = getLastMySQLRecord("hum");
 		lastMongoDate = getMongoRecords("hum", lastMySQLDate, mongoHum);
 		if (lastMongoDate != null) {
 			ewma();
@@ -137,15 +141,15 @@ public class Mongo2MySQL {
 		}
 
 		// Luminosity
-		lastMySQLDate = getLastMySQLRecord("cel").datatoString();
+		lastMySQLDate = getLastMySQLRecord("cel");
 		lastMongoDate = getMongoRecords("cel", lastMySQLDate, mongoCel);
 		if (lastMongoDate != null) {
 			ewma();
 			updateMySQL("cel", lastMongoDate, average());
 		}
-		
+
 		// Motion
-		lastMySQLDate = getLastMySQLRecord("mov").datatoString();
+		lastMySQLDate = getLastMySQLRecord("mov");
 		lastMongoDate = getMongoRecords("mov", lastMySQLDate, mongoMov);
 		if (lastMongoDate != null) {
 			correctMotion();
@@ -173,9 +177,8 @@ public class Mongo2MySQL {
 		Statement stmt = null;
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://" + MySQLServer + "/" + MySQLDatabase + "?user="
-					+ MySQLUser + "&password=" + MySQLPass);
+					+ MySQLUser + "&password=" + MySQLPass + "&serverTimezone=UTC");
 
 			stmt = conn.createStatement();
 			stmt.executeUpdate("INSERT INTO medicoessensores (TipoSensor,ValorMedicao,DataHoraMedicao) VALUES('"
@@ -185,9 +188,10 @@ public class Mongo2MySQL {
 			System.out.println("Error connecting to Mysql " + e);
 		} finally {
 			try {
-				if (conn != null)
+				if (conn != null) {
 					stmt.close();
-				conn.close();
+					conn.close();
+				}
 			} catch (SQLException e) {
 				System.out.println("Error closing connecting to Mysql " + e);
 			}
@@ -195,25 +199,26 @@ public class Mongo2MySQL {
 
 	}
 
-	private static Medicao getLastMySQLRecord(String tipoSensor) {
+	private static String getLastMySQLRecord(String tipoSensor) {
+
+		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date lastdata = new Timestamp(0);
 
 		Connection conn = null;
-		Statement stmt = null;
 		ResultSet rs = null;
-		Medicao med = null;
+		PreparedStatement ps = null;
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://" + MySQLServer + "/" + MySQLDatabase + "?user="
-					+ MySQLUser + "&password=" + MySQLPass);
+					+ MySQLUser + "&password=" + MySQLPass + "&serverTimezone=UTC");
 
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Main.MedicoesSensores WHERE TipoSensor='" + tipoSensor
-					+ "' ORDER BY DataHoraMedicao DESC LIMIT 1");
-
-			if (rs != null) {
-				while (rs.next()) {
-					med = new Medicao(tipoSensor, rs.getTimestamp("DataHoraMedicao"), rs.getDouble("ValorMedicao"));
+			ps = conn
+					.prepareStatement("SELECT MAX(DataHoraMedicao) AS lastdata FROM MedicoesSensores WHERE TipoSensor='"
+							+ tipoSensor + "'");
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				if (rs.getDate("lastdata") != null) {
+					lastdata = rs.getDate("lastdata");
 				}
 			}
 
@@ -222,7 +227,6 @@ public class Mongo2MySQL {
 		} finally {
 			try {
 				if (conn != null) {
-					stmt.close();
 					rs.close();
 					conn.close();
 				}
@@ -230,13 +234,13 @@ public class Mongo2MySQL {
 				System.out.println("Error closing connecting to Mysql " + e);
 			}
 		}
-		return med;
+		return output.format(lastdata).toString();
 	}
 
 	private static void correctMotion() {
 
 		for (int i = 0; i < medicoes.size() - 1; i++) {
-			if (medicoes.get(i).getValor() != 0 &&  medicoes.get(i).getValor() != 1) {
+			if (medicoes.get(i).getValor() != 0 && medicoes.get(i).getValor() != 1) {
 				medicoes.get(i).setValor((double) 0);
 			}
 		}
@@ -248,7 +252,7 @@ public class Mongo2MySQL {
 
 		for (int i = 0; i < medicoes.size(); i++) {
 			if (medicoes.get(i).getValor() == 1) {
-			total = 1;
+				total = 1;
 			}
 		}
 		return total;
