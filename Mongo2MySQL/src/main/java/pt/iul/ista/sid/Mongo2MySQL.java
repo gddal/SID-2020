@@ -10,9 +10,10 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -161,7 +162,7 @@ public class Mongo2MySQL {
 			medicoes.add(new Medicao(tipoSensor, cursor.next()));
 		}		
 		System.out.println(", found " + medicoes.size() + " new records");
-		return (medicoes.isEmpty()) ? null : medicoes.get(medicoes.size()).datatoString();
+		return (medicoes.isEmpty()) ? null : medicoes.get(medicoes.size()-1).datatoString();
 	}
 
 	private static void saveMedicoes(String tipoSensor, String data, double valor) {
@@ -174,7 +175,7 @@ public class Mongo2MySQL {
 					+ MySQLUser + "&password=" + MySQLPass + "&serverTimezone=UTC");
 
 			stmt = conn.createStatement();
-			System.out.print("| write to mysql: " + data + " " + tipoSensor + " " + valor);
+			System.out.println("| write to mysql: " + data + " " + tipoSensor + " " + valor);
 			stmt.executeUpdate("INSERT INTO medicoessensores (TipoSensor,ValorMedicao,DataHoraMedicao) VALUES('"
 					+ tipoSensor + "','" + valor + "','" + data + "')");
 
@@ -195,8 +196,10 @@ public class Mongo2MySQL {
 
 	private static String getLastMySQLRecord(String tipoSensor) {
 
+		Calendar cal = Calendar.getInstance(); 
+		cal.setTimeZone(TimeZone.getTimeZone("GMT")); 
 		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date lastdata = new Timestamp(0);
+		String lastdata = null;
 
 		Connection conn = null;
 		ResultSet rs = null;
@@ -206,14 +209,13 @@ public class Mongo2MySQL {
 			conn = DriverManager.getConnection("jdbc:mysql://" + MySQLServer + "/" + MySQLDatabase + "?user="
 					+ MySQLUser + "&password=" + MySQLPass + "&serverTimezone=UTC");
 
-			ps = conn
-					.prepareStatement("SELECT MAX(DataHoraMedicao) AS lastdata FROM MedicoesSensores WHERE TipoSensor='"
-							+ tipoSensor + "'");
+			ps = conn.prepareStatement("SELECT MAX(DataHoraMedicao) AS lastdata FROM MedicoesSensores WHERE TipoSensor='" + tipoSensor + "'");
 			rs = ps.executeQuery();
-			if (rs.next()) {
-				if (rs.getDate("lastdata") != null) {
-					lastdata = rs.getDate("lastdata");
-				}
+			rs.next();
+			if (rs.getString("lastdata") != null) {
+				lastdata = rs.getString("lastdata");
+			} else {
+				lastdata = output.format(new Timestamp(0));
 			}
 
 		} catch (Exception e) {
@@ -228,7 +230,10 @@ public class Mongo2MySQL {
 				System.out.println("Error closing connecting to Mysql " + e);
 			}
 		}
-		return output.format(lastdata).toString();
+		
+		System.out.println("| Las record for sensor: " + tipoSensor + " is " + lastdata);
+
+		return lastdata;
 	}
 
 	private static double detectMotion() {
