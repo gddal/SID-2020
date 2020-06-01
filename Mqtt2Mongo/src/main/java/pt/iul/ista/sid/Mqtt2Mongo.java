@@ -19,7 +19,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -60,6 +59,9 @@ public class Mqtt2Mongo implements MqttCallback {
 	private static final String INI_MOT = "mongo_motion";
 	private static final String INI_ERR = "mongo_errors";
 
+	private static final String INI_TIME = "mongo_addtime";
+	private static final String INI_CLEAN = "mongo_clean";
+
 	static String mqttBroker;
 	static String mqttTopic;
 	static String mongoServer;
@@ -69,6 +71,9 @@ public class Mqtt2Mongo implements MqttCallback {
 	static String mongoLuminosity;
 	static String mongoMotion;
 	static String mongoErrors;
+
+	static String mongoTime;
+	static String mongoClean;
 
 	static MqttClient mqttClient;
 	static MongoClient mongoClient;
@@ -98,7 +103,10 @@ public class Mqtt2Mongo implements MqttCallback {
 			mongoLuminosity = pFile.getProperty(INI_CEL);
 			mongoMotion = pFile.getProperty(INI_MOT);
 			mongoErrors = pFile.getProperty(INI_ERR);
-
+			
+			mongoTime = pFile.getProperty(INI_TIME);
+			mongoClean = pFile.getProperty(INI_CLEAN);
+			
 			System.out.println("-------------------------------------------------");
 			System.out.println("| mqttBroker: " + mqttBroker);
 			System.out.println("| mqttTopic: " + mqttTopic);
@@ -125,7 +133,6 @@ public class Mqtt2Mongo implements MqttCallback {
 		try {
 			i = new Random().nextInt(100000);
 			mqttClient = new MqttClient(mqttBroker, "CloudToMongo_" + String.valueOf(i) + "_" + mqttTopic);
-//			mqttClient.setConnectionTimeout(120);
 			mqttClient.connect();
 			mqttClient.setCallback(this);
 			mqttClient.subscribe(mqttTopic);
@@ -133,6 +140,7 @@ public class Mqtt2Mongo implements MqttCallback {
 			System.out.println("-------------------------------------------------");
 			System.out.println("| Connection to mqtt failed!");
 			System.out.println("| Cause: " + cause.getMessage());
+			cause.printStackTrace();
 			System.out.println("-------------------------------------------------");
 			System.out.println("Connection lost!");
 		}
@@ -214,7 +222,7 @@ public class Mqtt2Mongo implements MqttCallback {
 
 		BasicDBObject document = (BasicDBObject) JSON.parse(clean(message.toString()));
 		
-		System.out.println("| Mensagem: " + clean(message.toString()));
+		System.out.println("| sendToMongo: " + clean(message.toString()));
 
 		System.out.println("-------------------------------------------------");
 		System.out.println("| MongoDB server: " + mongoServer);
@@ -259,11 +267,13 @@ public class Mqtt2Mongo implements MqttCallback {
 
 		boolean err = false;
 		
+		System.out.println("| parseDocument: " + document.toString());
+
 		SimpleDateFormat input = new SimpleDateFormat( DATE_FORMAT + " " + TIME_FORMAT );
 		SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date data = input.parse(document.get("dat").toString() + " " + document.get("tim").toString());
 		
-		String newDateValue = output.format(addHoursToJavaUtilDate(data,1));// TODO
+		String newDateValue = output.format(addHoursToJavaUtilDate(data,(mongoTime.equals(null) ? 0 : Integer.parseInt(mongoTime))));// TODO Correcção da hora do sensor
 		
 		if (document.containsField("tmp")) {
 			if (isNumeric(document.get("tmp").toString())) {
@@ -306,7 +316,13 @@ public class Mqtt2Mongo implements MqttCallback {
 	}
 
 	public String clean(String message) {
-		return (message.replaceAll("\"mov\":\"0\"", ",").replaceAll("\"sens\":\"eth\"", ""));
+		
+		if ( Boolean.parseBoolean(mongoClean)) {
+			return (message.replaceAll("\"mov\":\"0\"", ",").replaceAll("\"sens\":\"eth\"", ""));
+		}
+		else {
+			return (message);	
+		}
 
 	}
 
