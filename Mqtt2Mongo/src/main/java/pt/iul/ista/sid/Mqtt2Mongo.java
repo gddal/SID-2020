@@ -142,7 +142,6 @@ public class Mqtt2Mongo implements MqttCallback {
 			System.out.println("| Cause: " + cause.getMessage());
 			cause.printStackTrace();
 			System.out.println("-------------------------------------------------");
-			System.out.println("Connection lost!");
 		}
 	}
 
