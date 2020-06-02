@@ -162,7 +162,7 @@ public class Mongo2MySQL {
 			medicoes.add(new Medicao(tipoSensor, cursor.next()));
 		}		
 		System.out.println(", found " + medicoes.size() + " new records");
-		return (medicoes.isEmpty()) ? null : medicoes.get(medicoes.size()-1).datatoString();
+		return (medicoes.isEmpty()) ? null : medicoes.get(medicoes.size()-1).getData();
 	}
 
 	private static void saveMedicoes(String tipoSensor, String data, double valor) {
