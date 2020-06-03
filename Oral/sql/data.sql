@@ -43,3 +43,6 @@ INSERT INTO Main.Ronda (diaSemana,inicio) VALUES ('7','15:00:00' );
 INSERT INTO Main.Ronda (diaSemana,inicio) VALUES ('7','20:00:00' );
 
 ALTER USER 'adm' identified with mysql_native_password by 'pass';
+ALTER USER 'dir' identified with mysql_native_password by 'pass';
+ALTER USER 'che' identified with mysql_native_password by 'pass';
+ALTER USER 'seg' identified with mysql_native_password by 'pass';
