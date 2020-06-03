@@ -18,7 +18,7 @@ BEGIN
     EXECUTE dropUserStatement;
     DEALLOCATE PREPARE dropUserStatement;   
 
-    SET @createUserCMD = concat('CREATE USER ''', in_username, ''' IDENTIFIED BY ''', in_pwd, ''';');
+    SET @createUserCMD = concat('CREATE USER ''', in_username, ''' IDENTIFIED WITH mysql_native_password BY ''', in_pwd, ''';');
     PREPARE createUserStatement FROM @createUserCMD;
     EXECUTE createUserStatement;
     DEALLOCATE PREPARE createUserStatement;   

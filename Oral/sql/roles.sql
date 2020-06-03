@@ -1,6 +1,6 @@
 USE `Main`;
 DROP USER IF EXISTS museu_system;
-CREATE USER museu_system IDENTIFIED BY 'pass';
+CREATE USER museu_system IDENTIFIED WITH mysql_native_password BY 'pass';
 GRANT ALL PRIVILEGES ON Main.* TO museu_system;
 
 DROP ROLE IF EXISTS Administradores;

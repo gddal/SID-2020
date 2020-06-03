@@ -53,7 +53,7 @@ IF (NEW.TipoSensor = 'tmp' OR NEW.TipoSensor = 'hum') THEN
 				NEW.DataHoraMedicao, 
 				NEW.TipoSensor, 
 				NEW.ValorMedicao, 
-				@valAviso,
+				@valMin,
 				'Alarme - Valor abaixo do permitido'
 				);
 		END IF;
